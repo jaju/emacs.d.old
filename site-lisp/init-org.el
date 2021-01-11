@@ -24,9 +24,14 @@
 
 ;; BEGIN -- https://github.com/stuartsierra/dotfiles
 ;; Org-babel and Clojure
-;;(require 'ob-clojure)
+(require 'ob-clojure)
 (setq org-babel-clojure-backend 'cider)
 ;;(require 'cider)
+
+;; HTTP interactions
+(use-package ob-http)
+(use-package restclient)
+(use-package ob-restclient)
 
 ;; reveal.js setup
 ;; (require 'ox-reveal)
@@ -35,7 +40,7 @@
 ;;       (anything . "{src: '%splugin/animate/anything.js', async: true, condition: function() { return true; }}"))
 
 ;; Moar languages
-;(require 'ob-js)
+(require 'ob-js)
 (org-babel-do-load-languages
  'org-babel-load-languages
  '((emacs-lisp . t)
@@ -49,7 +54,9 @@
    (makefile . t)
    (org . t)
    (sql . t)
-   (plantuml . t)))
+   (plantuml . t)
+   (http . t)
+   (restclient . t)))
 (setq org-confirm-babel-evaluate nil)
 
 ;; More from http://fgiasson.com/blog/index.php/2016/04/05/using-clojure-in-org-mode-and-implementing-asynchronous-processing/
