@@ -102,20 +102,21 @@
 
 (use-package treemacs)
 
-(use-package swiper)
-(use-package counsel)
-(use-package ivy
-  :diminish
-  :config
-  (ivy-mode 1))
+(use-package smex)
+  (use-package swiper)
+  (use-package counsel)
+  (use-package ivy
+    :diminish
+    :config
+    (ivy-mode 1))
 
-(setq ivy-use-virtual-buffers t)
-(setq enable-recursive-minibuffers t)
-(setq ivy-use-selectable-prompt t)
-(global-set-key (kbd "C-s") 'swiper)
-(global-set-key (kbd "C-c C-r") 'ivy-resume)
-(global-set-key (kbd "M-x") 'counsel-M-x)
-(global-set-key (kbd "<f2> u") 'counsel-unicode-char)
+  (setq ivy-use-virtual-buffers t)
+  (setq enable-recursive-minibuffers t)
+  (setq ivy-use-selectable-prompt t)
+  (global-set-key (kbd "C-s") 'swiper)
+  (global-set-key (kbd "C-c C-r") 'ivy-resume)
+  (global-set-key (kbd "M-x") 'counsel-M-x)
+  (global-set-key (kbd "<f2> u") 'counsel-unicode-char)
 
 (use-package which-key
   :config

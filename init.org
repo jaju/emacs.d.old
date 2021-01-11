@@ -156,15 +156,25 @@ Install the package command-log-mode to enable showing our keystrokes
   (use-package treemacs)
 #+END_SRC
 
+
 * Completion Frameworks
 We'll go with ivy
 #+BEGIN_SRC emacs-lisp
+  (use-package smex) ;; counsel-M-x uses this to remember last command
   (use-package swiper)
   (use-package counsel)
   (use-package ivy
     :diminish
     :config
     (ivy-mode 1))
+
+  ;; From
+  ;; https://github.com/abo-abo/swiper/pull/1929#issuecomment-462828989
+  ;; Keep adding to history for quicker access of recently used commands
+  (defun add-m-x-history ()
+    (setq last-counsel-M-x-command (caar command-history)))
+
+  (advice-add #'counsel-M-x :after #'add-m-x-history)
 
   (setq ivy-use-virtual-buffers t)
   (setq enable-recursive-minibuffers t)
@@ -178,25 +188,25 @@ We'll go with ivy
 
 * LSP
 #+BEGIN_SRC emacs-lisp
-          (use-package which-key
-            :config
-            (which-key-mode))
-          (use-package yasnippet) ;; By default, lsp-mode turns on snippets
-          (use-package lsp-mode
-            :hook ((lsp-mode . lsp-enable-which-key-integration)
-                   (lsp-mode . lsp-diagnostics-modeline-mode))
-            :custom
-            (lsp-diagnostics-modeline-mode :project))
-          (use-package lsp-ivy)
-          (use-package lsp-ui
-            :commands lsp-ui-mode
-            :after lsp-mode)
-          (use-package lsp-ivy
-            :commands lsp-ivy-workspace-symbol
-            :after (ivy lsp-mode))
-          (use-package lsp-treemacs
-            :commands lsp-treemacs-errors-list)
-          (use-package dap-mode)
+  (use-package which-key
+    :config
+    (which-key-mode))
+  (use-package yasnippet) ;; By default, lsp-mode turns on snippets
+  (use-package lsp-mode
+    :hook ((lsp-mode . lsp-enable-which-key-integration)
+           (lsp-mode . lsp-diagnostics-modeline-mode))
+    :custom
+    (lsp-diagnostics-modeline-mode :project))
+  (use-package lsp-ivy)
+  (use-package lsp-ui
+    :commands lsp-ui-mode
+    :after lsp-mode)
+  (use-package lsp-ivy
+    :commands lsp-ivy-workspace-symbol
+    :after (ivy lsp-mode))
+  (use-package lsp-treemacs
+    :commands lsp-treemacs-errors-list)
+  (use-package dap-mode)
 #+END_SRC
 
 #+RESULTS:
@@ -212,6 +222,7 @@ We'll go with ivy
 #+BEGIN_SRC emacs-lisp
   (load "init-clojure")
 #+END_SRC
+
 
 * Java
 #+BEGIN_SRC emacs-lisp
