@@ -6,6 +6,8 @@
   :ensure t)
 (use-package cider
   :ensure t)
+(use-package inf-clojure
+  :ensure t)
 (use-package clojure-mode
   :ensure t
   :config
