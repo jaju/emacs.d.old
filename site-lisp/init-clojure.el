@@ -1,4 +1,4 @@
-;;; clojure.el -- Clojure fun configuration
+;;; init-clojure.el -- Clojure fun configuration
 ;;; Commentary:
 ;;; Code:
 
@@ -13,7 +13,7 @@
   :config
   (require 'flycheck-clj-kondo))
 
-(defun pretty-fns ()
+(defun clj/pretty-fns ()
   (font-lock-add-keywords
    'clojure-mode `(("(\\(fn\\)[\[[:space:]]"
 		    (0 (progn (compose-region (match-beginning 1) (match-end 1)
@@ -25,7 +25,7 @@
      (define-key clojure-mode-map (kbd "C-c C-h") #'cider-cheatsheet)
      (add-hook 'clojure-mode-hook 'lsp)
      (add-hook 'clojurescript-mode-hook 'lsp)
-     (add-hook 'clojure-mode-hook 'pretty-fns)
+     (add-hook 'clojure-mode-hook 'clj/pretty-fns)
      (add-hook 'cider-repl-mode-hook
                '(lambda () (define-key cider-repl-mode-map (kbd "C-c M-b")
 			     'cider-repl-clear-buffer)))))
@@ -52,9 +52,9 @@
 ;;     (add-hook 'scheme-mode-hook #'parinfer-mode)
 ;;     (add-hook 'lisp-mode-hook #'parinfer-mode)))
 
-(defun bb-repl ()
+(defun clj/bb-repl ()
   (interactive)
   (inf-clojure "bb"))
 
-(provide 'clojure)
-;;; clojure.el ends here
+(provide 'init-clojure)
+;;; init-clojure.el ends here

@@ -7,9 +7,16 @@
 ;;;
 
 (require 'org)
+
 (use-package org-bullets
   :config
   (add-hook 'org-mode-hook (lambda () (org-bullets-mode 1))))
+
+;;;;;;;;;;;;;;
+;;; Behaviours
+;;;;;;;;;;;;;;
+
+(add-to-list 'auto-mode-alist '("\\.org$" . org-mode))
 
 ;; Places where the agenda files exist.
 (setq org-directory "~/.org/"
@@ -22,65 +29,59 @@
       org-return-follows-link t
       org-hide-emphasis-markers nil)
 
-(add-to-list 'auto-mode-alist '("\\.org$" . org-mode))
-
-
-(font-lock-add-keywords 'org-mode
-                          '(("^ *\\([-]\\) "
-                             (0 (prog1 () (compose-region (match-beginning 1) (match-end 1) "➤"))))))
-
-(font-lock-add-keywords 'org-mode
-  '(("^\\*+ "
-     ":" nil nil
-     (0 (put-text-property (match-beginning 0) (match-end 0) 'display " ")))))
-
- (let* ((variable-tuple
-         (cond ((x-list-fonts "Fira Code") '(:font "Fira Code"))
-	       ((x-list-fonts "ETBembo")         '(:font "ETBembo"))
-               ((x-list-fonts "Source Sans Pro") '(:font "Source Sans Pro"))
-               ((x-list-fonts "Lucida Grande")   '(:font "Lucida Grande"))
-               ((x-list-fonts "Verdana")         '(:font "Verdana"))
-               ((x-family-fonts "Sans Serif")    '(:family "Sans Serif"))
-               (nil (warn "Cannot find a Sans Serif Font.  Install Source Sans Pro."))))
-         (base-font-color     (face-foreground 'underline nil 'default))
-         (faceline           `(:inherit default :weight semi-bold :foreground ,base-font-color :background "#333"))
-	 (headline           `(:inherit default :weight extra-bold :foreground ,base-font-color :background "#333")))
-
-    (custom-theme-set-faces
-     'user
-     `(org-tag ((t (,@headline ,@variable-tuple :height 1.0 :foreground "yellow" :background "#333" :box t :width semi-condensed))))
-     `(org-level-8 ((t (,@headline ,@variable-tuple))))
-     `(org-level-7 ((t (,@headline ,@variable-tuple))))
-     `(org-level-6 ((t (,@headline ,@variable-tuple))))
-     `(org-level-5 ((t (,@headline ,@variable-tuple))))
-     `(org-level-4 ((t (,@headline ,@variable-tuple :height 1.0))))
-     `(org-level-3 ((t (,@headline ,@variable-tuple :height 1.2))))
-     `(org-level-2 ((t (,@faceline ,@variable-tuple :height 1.4))))
-     `(org-level-1 ((t (,@headline ,@variable-tuple :height 1.6))))
-     `(org-document-title ((t (,@headline ,@variable-tuple :height 1.5 :underline nil))))))
-
 
 (setq org-todo-keywords
       '((sequence "TODO" "WAITING" "|" "DONE" "DELEGATED")  ;; Tasks
         (sequence "SCHEDULE" "|" "MEETING-OVER")            ;; Meetings
         (sequence "RAW" "REFINE" "|" "IGNORE" "RECORDED"))) ;; Ideas
 
-;; BEGIN -- https://github.com/stuartsierra/dotfiles
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Fonts, styles, sizes for the headlines, tags
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(font-lock-add-keywords 'org-mode
+  '(("^\\*+ "
+     ":" nil nil
+     (0 (put-text-property (match-beginning 0) (match-end 0) 'display " ")))
+    ("^ *\\([-]\\) "
+     (0 (prog1 () (compose-region (match-beginning 1) (match-end 1) "➤"))))))
+
+(let* ((variable-tuple
+        (cond ((x-list-fonts "Fira Code")       '(:font "Fira Code"))
+	      ((x-list-fonts "ETBembo")         '(:font "ETBembo"))
+              ((x-list-fonts "Source Sans Pro") '(:font "Source Sans Pro"))
+              ((x-list-fonts "Lucida Grande")   '(:font "Lucida Grande"))
+              ((x-list-fonts "Verdana")         '(:font "Verdana"))
+              ((x-family-fonts "Sans Serif")    '(:family "Sans Serif"))
+              (nil (warn "Cannot find a Sans Serif Font.  Install Source Sans Pro."))))
+       (base-font-color     (face-foreground 'underline nil 'default))
+       (faceline           `(:inherit default :weight semi-bold :foreground ,base-font-color :background "#333"))
+       (headline           `(:inherit default :weight extra-bold :foreground ,base-font-color :background "#333")))
+
+  (custom-theme-set-faces
+   'user
+   `(org-tag ((t (,@headline ,@variable-tuple :height 1.0 :foreground "yellow" :background "#333" :box t :width semi-condensed))))
+   `(org-level-8 ((t (,@headline ,@variable-tuple))))
+   `(org-level-7 ((t (,@headline ,@variable-tuple))))
+   `(org-level-6 ((t (,@headline ,@variable-tuple))))
+   `(org-level-5 ((t (,@headline ,@variable-tuple))))
+   `(org-level-4 ((t (,@headline ,@variable-tuple :height 1.0))))
+   `(org-level-3 ((t (,@headline ,@variable-tuple :height 1.2))))
+   `(org-level-2 ((t (,@faceline ,@variable-tuple :height 1.4))))
+   `(org-level-1 ((t (,@headline ,@variable-tuple :height 1.6))))
+   `(org-document-title ((t (,@headline ,@variable-tuple :height 1.5 :underline nil))))))
+
+
 ;; Org-babel and Clojure
 (require 'ob-clojure)
+(require 'cider)
 (setq org-babel-clojure-backend 'cider)
-;;(require 'cider)
 
 ;; HTTP interactions
 (use-package ob-http)
 (use-package restclient)
 (use-package ob-restclient)
-
-;; reveal.js setup
-;; (require 'ox-reveal)
-;; (setq org-reveal-external-plugins
-;;     '((animate . "{src: '%splugin/animate/animate.js', async: true, condition: function() { return !!document.body.classList; }}")
-;;       (anything . "{src: '%splugin/animate/anything.js', async: true, condition: function() { return true; }}"))
 
 ;; Moar languages
 (require 'ob-js)
@@ -126,38 +127,37 @@
       org-src-tab-acts-natively t
       org-reveal-root "https://p.msync.org/reveal.js")
 
-;(defvar hugo-base-dir "~/Projects/hugo-blog")
+;; more reveal.js setup
+(setq org-reveal-external-plugins
+      '((animate . "{src: '%splugin/animate/animate.js', async: true, condition: function() { return !!document.body.classList; }}")
+	(anything . "{src: '%splugin/animate/anything.js', async: true, condition: function() { return true; }}")))
 
-;; (define-skeleton org-post-skeleton
-;;   "Inserts the right directives for hugo-orgmode blogging"
-;;   "Title: "
-;;   "#+HUGO_BASE_DIR: " hugo-base-dir "\n"
-;;   "#+HUGO_SECTION: posts\n"
-;;   "#+TITLE: " str "\n"
-;;   "#+SUMMARY: \n"
-;;   "#+DATE: " (now) "\n"
-;;   "#+LASTMOD: " (now) "\n"
-;;   "#+TAGS[]: \n"
-;;   "#+PUBLISHED: false\n"
-;;   "#+PROPERTY: header-args:clojure :exports source :results output :comments link :session *clojure-nrepl*\n"
-;;   "#+PROPERTY: header-args:python :exports source :results output :comments link :session *python-dl*\n"
-;;   "#+PROPERTY: header-args:bash :exports source :results output :comments link :session *shell*\n")
+ (define-skeleton org-post-skeleton
+   "Inserts the right directives for hugo-orgmode blogging"
+   "Title: "
+   "** " str "\n"
+   ":PROPERTIES:\n"
+   ":EXPORT_FILE_NAME: " (replace-regexp-in-string " " "-" (downcase str)) "\n"
+   ":EXPORT_DATE: " (ut/date) "\n"
+   ":EXPORT_HUGO_MENU: :menu \"main\"\n"
+   ":EXPORT_HUGO_CUSTOM_FRONT_MATTER: :key value\n"
+   ":END:\n")
 
 
-;; (define-skeleton org-note-skeleton
-;;   "Inserts the right directives for hugo-orgmode blogging"
-;;   "Title: "
-;;   "#+HUGO_BASE_DIR: " hugo-base-dir "\n"
-;;   "#+HUGO_SECTION: notes\n"
-;;   "#+TITLE: " str "\n"
-;;   "#+SUMMARY: \n"
-;;   "#+DATE: " (now) "\n"
-;;   "#+LASTMOD: " (now) "\n"
-;;   "#+TAGS[]: \n"
-;;   "#+PUBLISHED: false\n"
-;;   "#+PROPERTY: header-args:clojure :exports source :results output :comments link :session *clojure-nrepl*\n"
-;;   "#+PROPERTY: header-args:python :exports source :results output :comments link :session *python-dl*\n"
-;;   "#+PROPERTY: header-args:bash :exports source :results output :comments link :session *shell*\n")
+ (define-skeleton org-note-skeleton
+   "Inserts the right directives for notes"
+   "Title: "
+   "#+HUGO_BASE_DIR: ~/Projects/hugo-blog\n"
+   "#+HUGO_SECTION: notes\n"
+   "#+TITLE: " str "\n"
+   "#+SUMMARY: \n"
+   "#+DATE: " (ut/now) "\n"
+   "#+LASTMOD: " (ut/now) "\n"
+   "#+TAGS[]: \n"
+   "#+PUBLISHED: false\n"
+   "#+PROPERTY: header-args:clojure :exports source :results output :comments link :session *clojure-nrepl*\n"
+   "#+PROPERTY: header-args:python :exports source :results output :comments link :session *python-dl*\n"
+   "#+PROPERTY: header-args:bash :exports source :results output :comments link :session *shell*\n")
 
 (setq org-publish-project-alist
       '(
@@ -165,14 +165,14 @@
          :base-directory "~/.org/msync/notes/"
          :base-extension "org"
          :recursive t
-         :publishing-function org-hugo-export-to-md
+         :publishing-function org-publish-attachment
          :publishing-directory "~/Projects/hugo-blog/content/notes"
 	 :with-date t
 	 )
 	
         ("msync-notes-static"
          :base-directory "~/.org/msync/notes"
-         :base-extension "css\\|js\\|png\\|jpg\\|gif\\|pdf\\|mp3\\|ogg\\|swf\\|py\\|clj\\|cljs"
+         :base-extension "css\\|js\\|png\\|jpg\\|gif\\|pdf\\|mp3\\|ogg\\|py\\|clj\\|cljs\\|json\\|txt"
          :recursive t
          :publishing-directory "~/Projects/hugo-blog/content/notes"
          :publishing-function org-publish-attachment)
@@ -189,14 +189,6 @@
          :headline-levels 4
          :publishing-function org-reveal-export-to-html)))
 
-(defun now ()
-  "Insert the current timestamp at the cursor position."
-  (interactive)
-  (insert (format-time-string "%Y-%m-%dT%T%:z")))
-(defun today ()
-  "Insert the current timestamp at the cursor position."
-  (interactive)
-  (insert (format-time-string "[%Y-%m-%d %a]")))
 (define-key global-map (kbd "\C-xt") 'today)
 
 
@@ -242,15 +234,27 @@ Returns the list of tangled files."
 (setq org-roam-directory "~/.org/roam/")
 (setq org-roam-db-location "~/.org/roam/org-roam.db")
 (setq org-roam-index-file "~/.org/roam/index.org")
-(add-hook 'after-init-hook 'org-roam-mode)
 
-(add-hook 'org-mode-hook
-	  (lambda () (subword-mode 1)))
+(add-hook 'after-init-hook 'org-roam-mode)
 
 ;; PlantUML
 (setq org-plantuml-jar-path (expand-file-name "/usr/local/Cellar/plantuml/1.2021.0/libexec/plantuml.jar"))
 (add-to-list 'org-src-lang-modes '("plantuml" . plantuml))
 ;(org-babel-do-load-languages 'org-babel-load-languages '((plantuml . t)))
 
-(provide 'orgmode)
-;;; orgmode.el ends here
+(use-package htmlize
+  :ensure t)
+
+;; From https://stackoverflow.com/questions/10969617/hiding-markup-elements-in-org-mode
+(defun org-toggle-emphasis ()
+  "Toggle hiding/showing of org emphasize markers."
+  (interactive)
+  (if org-hide-emphasis-markers
+      (set-variable 'org-hide-emphasis-markers nil)
+    (set-variable 'org-hide-emphasis-markers t)))
+
+(add-hook 'org-mode-hook
+	  (lambda () (subword-mode 1)))
+
+(provide 'init-org)
+;;; init-org.el ends here
