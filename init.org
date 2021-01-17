@@ -46,8 +46,8 @@ We turn off some default behaviours we are not interested in (and vice versa, tu
   (show-paren-mode)
 
   ;; Mac-specific settings
-  (when (eq system-type 'darwin)
-    (setq mac-command-modifier 'meta))
+  ;; (when (eq system-type 'darwin)
+    ;; (setq mac-command-modifier 'meta))
 
   (setq initial-frame-alist
         '((top . 15)
@@ -57,7 +57,7 @@ We turn off some default behaviours we are not interested in (and vice versa, tu
 #+END_SRC
 
 ** Let us keep reminding ourselves
-Of the new, or upcoming, shiny things
+Of the new, or upcoming, shiny things. When they are available, enable the right compile/config options too.
 #+BEGIN_SRC emacs-lisp
   ;; https://www.masteringemacs.org/article/speed-up-emacs-libjansson-native-elisp-compilation
   (if (and (fboundp 'native-comp-available-p)
@@ -77,7 +77,7 @@ Of the new, or upcoming, shiny things
 
 ** Fonts and themes
 #+BEGIN_SRC emacs-lisp
-  (set-face-attribute 'default nil :font "Fira Code" :height 180)
+  (set-face-attribute 'default nil :font "Fira Code" :height 150)
   ;; (load-theme 'modus-vivendi)
   (load-theme 'wombat)
 #+END_SRC
@@ -118,6 +118,24 @@ Of the new, or upcoming, shiny things
    #+END_SRC
 
    
+** Basic functions
+
+#+begin_src emacs-lisp
+  (defun ut/now ()
+    "Insert the current timestamp at the cursor position."
+    (interactive)
+    (insert (format-time-string "%Y-%m-%dT%T%:z")))
+  (defun ut/today ()
+    "Insert the current timestamp at the cursor position."
+    (interactive)
+    (insert (format-time-string "[%Y-%m-%d %a]")))
+(defun ut/date ()
+  "Insert the current date at the cursor position."
+  (interactive)
+  (insert (format-time-string "%Y-%m-%d")))
+#+end_src
+
+
 * Packages
 ** We'll first set the repository
 #+BEGIN_SRC emacs-lisp
@@ -161,8 +179,46 @@ Install the package command-log-mode to enable showing our keystrokes
 #+END_SRC
 
 #+BEGIN_SRC emacs-lisp
-  (use-package treemacs)
+  (use-package treemacs
+    :ensure t
+    :defer t
+    :init
+    (with-eval-after-load 'winum
+      (define-key winum-keymap (kbd "M-0") #'treemacs-select-window))
+    :config
+    (progn
+      (setq
+       treemacs-collapse-dirs (if treemacs-python-executable 3 0)
+       treemacs-width 40))
+    )
 #+END_SRC
+
+We can get a nice dashboard with the following setup.
+Github - [[https://github.com/emacs-dashboard/emacs-dashboard][https://github.com/emacs-dashboard/emacs-dashboard]]
+#+begin_src emacs-lisp
+   (use-package page-break-lines)
+   (use-package all-the-icons)
+   (use-package dashboard
+     :ensure t
+     :config
+     (dashboard-setup-startup-hook))
+
+   ;; Content is not centered by default. To center, set
+  (setq
+   dashboard-items '(
+		     (recents . 5)
+		     (projects . 5)
+		     (agenda . 5)
+		     (registers . 5))
+   dashboard-center-content t
+   dashboard-set-heading-items t
+   dashboard-set-file-icons t
+   dashboard-set-navigator t
+   dashboard-set-footer nil
+   )
+
+#+end_src
+
 
 #+BEGIN_SRC emacs-lisp
 (use-package dash-at-point
@@ -200,6 +256,8 @@ We'll go with ivy
 
 
 * LSP
+[[https://microsoft.github.io/language-server-protocol/][Language Server Protocol]] is the protocol used between an editor/IDE client and a language server that provides various language features for productive development.
+
 #+BEGIN_SRC emacs-lisp
   (use-package which-key
     :config
@@ -230,6 +288,8 @@ We'll go with ivy
 
 
 * Clojure
+
+** The /configuration/                                                :load:
 #+BEGIN_SRC emacs-lisp
   (load "init-clojure")
 #+END_SRC
@@ -241,6 +301,13 @@ We'll go with ivy
 
 
 * Org Mode
+** Useful links
+- Face attributes - [[https://www.gnu.org/software/emacs/manual/html_node/elisp/Face-Attributes.html][link]]
+
+** Notes
+- The /htmlize/ package is required to ensure the exported HTML from org-mode files has syntax-highlighted source-code blocks.
+  
+** The configuration                                                  :load:
 #+BEGIN_SRC emacs-lisp
   (load "init-org")
 #+END_SRC
@@ -258,6 +325,40 @@ We'll go with ivy
                   clojurescript-mode-hook
                   cider-repl-mode-hook))
     (add-hook hook #'enable-paredit-mode))
+#+end_src
+
+
+* Projects, Workspaces
+
+** Explorer
+#+begin_src emacs-lisp
+#+end_src
+
+
+** Projects
+#+begin_src emacs-lisp
+  (use-package projectile
+    :ensure t
+    :init
+    (projectile-mode +1)
+    :bind
+    (:map projectile-mode-map
+          ("s-p" . projectile-command-map)
+          ("C-c p" . projectile-command-map)))
+
+#+end_src
+
+** Tabs
+#+begin_src emacs-lisp
+  (use-package centaur-tabs
+    :demand
+    :config
+    (centaur-tabs-mode 1)
+    :bind
+    ("C-c w <left>" . centaur-tabs-backward)
+    ("C-c w <right>" . centaur-tabs-forward))
+
+  (setq centaur-tabs-style "bar")
 #+end_src
 
 
@@ -280,3 +381,8 @@ We'll go with ivy
 #+END_SRC
 
 
+
+** Moving Across Windows
+#+begin_src emacs-lisp
+(global-set-key (kbd "C-c w q") 'ace-window)
+#+end_src

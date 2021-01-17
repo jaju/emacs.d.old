@@ -24,8 +24,8 @@
 (show-paren-mode)
 
 ;; Mac-specific settings
-(when (eq system-type 'darwin)
-  (setq mac-command-modifier 'meta))
+;; (when (eq system-type 'darwin)
+  ;; (setq mac-command-modifier 'meta))
 
 (setq initial-frame-alist
       '((top . 15)
@@ -44,7 +44,7 @@
     (message "Native JSON is available")
   (message "Native JSON is *not* available"))
 
-(set-face-attribute 'default nil :font "Fira Code" :height 180)
+(set-face-attribute 'default nil :font "Fira Code" :height 150)
 ;; (load-theme 'modus-vivendi)
 (load-theme 'wombat)
 
@@ -79,6 +79,19 @@
 (add-to-list 'load-path (concat *emacsd-dir* "site-lisp"))
 (load-env-file (concat *emacsd-dir* "env"))
 
+(defun ut/now ()
+    "Insert the current timestamp at the cursor position."
+    (interactive)
+    (insert (format-time-string "%Y-%m-%dT%T%:z")))
+  (defun ut/today ()
+    "Insert the current timestamp at the cursor position."
+    (interactive)
+    (insert (format-time-string "[%Y-%m-%d %a]")))
+(defun ut/date ()
+  "Insert the current date at the cursor position."
+  (interactive)
+  (insert (format-time-string "%Y-%m-%d")))
+
 ;; Initialize package sources
 (require 'package)
 
@@ -108,7 +121,39 @@
   :ensure t
   :init (global-flycheck-mode))
 
-(use-package treemacs)
+(use-package treemacs
+  :ensure t
+  :defer t
+  :init
+  (with-eval-after-load 'winum
+    (define-key winum-keymap (kbd "M-0") #'treemacs-select-window))
+  :config
+  (progn
+    (setq
+     treemacs-collapse-dirs (if treemacs-python-executable 3 0)
+     treemacs-width 40))
+  )
+
+(use-package page-break-lines)
+ (use-package all-the-icons)
+ (use-package dashboard
+   :ensure t
+   :config
+   (dashboard-setup-startup-hook))
+
+ ;; Content is not centered by default. To center, set
+(setq
+ dashboard-items '(
+		   (recents . 5)
+		   (projects . 5)
+		   (agenda . 5)
+		   (registers . 5))
+ dashboard-center-content t
+ dashboard-set-heading-items t
+ dashboard-set-file-icons t
+ dashboard-set-navigator t
+ dashboard-set-footer nil
+ )
 
 (use-package dash-at-point
   :bind ("C-c d" . dash-at-point))
@@ -180,6 +225,27 @@
                 cider-repl-mode-hook))
   (add-hook hook #'enable-paredit-mode))
 
+
+
+(use-package projectile
+  :ensure t
+  :init
+  (projectile-mode +1)
+  :bind
+  (:map projectile-mode-map
+        ("s-p" . projectile-command-map)
+        ("C-c p" . projectile-command-map)))
+
+(use-package centaur-tabs
+  :demand
+  :config
+  (centaur-tabs-mode 1)
+  :bind
+  ("C-c w <left>" . centaur-tabs-backward)
+  ("C-c w <right>" . centaur-tabs-forward))
+
+(setq centaur-tabs-style "bar")
+
 (when (fboundp 'toggle-frame-fullscreen)
 (global-set-key (kbd "<f11>") 'toggle-frame-fullscreen))
 
@@ -190,3 +256,5 @@
     (backward-kill-word arg)))
 
 (global-set-key (kbd "C-w") 'backward-kill-word-or-kill-region)
+
+(global-set-key (kbd "C-c w q") 'ace-window)
