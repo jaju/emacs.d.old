@@ -57,13 +57,13 @@
          (with-temp-buffer
            (save-excursion
              (setq-local coding-system-for-read 'utf-8)
-             (insert "\0\n")
+             (insert "\n")
              (insert-file-contents file))
            (save-match-data
-             (when (re-search-forward "\0\n *\\([^#= \n]*\\)=" nil t)
+             (when (re-search-forward "\n *\\([^#= \n]*\\)=" nil t)
                (setq
                 env (split-string (buffer-substring (match-beginning 1) (point-max))
-                                  "\0\n"
+                                  "\n"
                                   'omit-nulls))))))
       (setq-default
        process-environment
@@ -79,6 +79,7 @@
 
 (add-to-list 'load-path (concat *emacsd-dir* "site-lisp"))
 (load-env-file (concat *emacsd-dir* "env"))
+(getenv "PATH")
 
 (defun ut/now ()
   "Insert the current timestamp at the cursor position."
