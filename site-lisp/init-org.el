@@ -189,7 +189,7 @@
          :headline-levels 4
          :publishing-function org-reveal-export-to-html)))
 
-(define-key global-map (kbd "\C-xt") 'today)
+(define-key global-map (kbd "\C-xt") 'ut/today)
 
 
 (defun directory-files-recursive (directory match maxdepth)
