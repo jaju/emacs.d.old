@@ -46,7 +46,8 @@
 
 (set-face-attribute 'default nil :font "Fira Code" :height 150)
 ;; (load-theme 'modus-vivendi)
-(load-theme 'wombat)
+;; (load-theme 'wombat)
+(load-theme 'tsdh-dark)
 
 (defun load-env-file (file)
   (if (null (file-exists-p file))
@@ -80,13 +81,13 @@
 (load-env-file (concat *emacsd-dir* "env"))
 
 (defun ut/now ()
-    "Insert the current timestamp at the cursor position."
-    (interactive)
-    (insert (format-time-string "%Y-%m-%dT%T%:z")))
-  (defun ut/today ()
-    "Insert the current timestamp at the cursor position."
-    (interactive)
-    (insert (format-time-string "[%Y-%m-%d %a]")))
+  "Insert the current timestamp at the cursor position."
+  (interactive)
+  (insert (format-time-string "%Y-%m-%dT%T%:z")))
+(defun ut/today ()
+  "Insert the current timestamp at the cursor position."
+  (interactive)
+  (insert (format-time-string "[%Y-%m-%d %a]")))
 (defun ut/date ()
   "Insert the current date at the cursor position."
   (interactive)
@@ -144,19 +145,19 @@
  ;; Content is not centered by default. To center, set
 (setq
  dashboard-items '(
-		   (recents . 5)
-		   (projects . 5)
-		   (agenda . 5)
-		   (registers . 5))
+                   (recents . 5)
+                   (projects . 5)
+                   (agenda . 5)
+                   (registers . 5))
  dashboard-center-content t
  dashboard-set-heading-items t
  dashboard-set-file-icons t
  dashboard-set-navigator t
  dashboard-set-footer nil
+ dashboard-startup-banner 'logo
  )
 
-(use-package dash-at-point
-  :bind ("C-c d" . dash-at-point))
+(use-package dash-at-point)
 
 (use-package smex) ;; counsel-M-x uses this to remember last command
 (use-package swiper)
@@ -168,7 +169,7 @@
 
 ;; From
 ;; https://github.com/abo-abo/swiper/pull/1929#issuecomment-462828989
-;; Keep adding to history for quicker access of recently used commands
+;; Keep adding to history for quicker access to recently used commands
 (defun add-m-x-history ()
   (setq last-counsel-M-x-command (caar command-history)))
 
@@ -177,10 +178,6 @@
 (setq ivy-use-virtual-buffers t)
 (setq enable-recursive-minibuffers t)
 (setq ivy-use-selectable-prompt t)
-(global-set-key (kbd "C-s") 'swiper)
-(global-set-key (kbd "C-c C-r") 'ivy-resume)
-(global-set-key (kbd "M-x") 'counsel-M-x)
-(global-set-key (kbd "<f2> u") 'counsel-unicode-char)
 
 (use-package which-key
   :config
@@ -210,7 +207,14 @@
 
 (load "init-clojure")
 
+(use-package lsp-java
+  :ensure t)
 
+(add-hook 'java-mode-hook #'lsp)
+
+(use-package python-mode)
+(use-package python-pytest)
+(use-package pyvenv)
 
 (load "init-org")
 
@@ -233,21 +237,23 @@
   (projectile-mode +1)
   :bind
   (:map projectile-mode-map
-        ("s-p" . projectile-command-map)
-        ("C-c p" . projectile-command-map)))
+        ("s-p" . projectile-command-map)))
 
 (use-package centaur-tabs
   :demand
   :config
-  (centaur-tabs-mode 1)
-  :bind
-  ("C-c w <left>" . centaur-tabs-backward)
-  ("C-c w <right>" . centaur-tabs-forward))
+  (centaur-tabs-mode 1))
 
 (setq centaur-tabs-style "bar")
 
+(global-set-key (kbd "C-c d") 'dash-at-point)
+(global-set-key (kbd "C-s") 'swiper)
+(global-set-key (kbd "C-c C-r") 'ivy-resume)
+(global-set-key (kbd "M-x") 'counsel-M-x)
+(global-set-key (kbd "<f2> u") 'counsel-unicode-char)
+(global-set-key (kbd "<f1> m") 'toggle-frame-maximized)
 (when (fboundp 'toggle-frame-fullscreen)
-(global-set-key (kbd "<f11>") 'toggle-frame-fullscreen))
+  (global-set-key (kbd "<f1> f") 'toggle-frame-fullscreen))
 
 (defun backward-kill-word-or-kill-region (&optional arg)
   (interactive "p")
@@ -257,4 +263,11 @@
 
 (global-set-key (kbd "C-w") 'backward-kill-word-or-kill-region)
 
+(global-set-key (kbd "C-c w <left>") 'centaur-tabs-backward)
+(global-set-key (kbd "C-c w <right>") 'centaur-tabs-forward)
 (global-set-key (kbd "C-c w q") 'ace-window)
+(global-set-key (kbd "C-c w o") 'imenu)
+(global-set-key (kbd "C-c t t") 'treemacs)
+(global-set-key (kbd "C-c t w") 'treemacs-switch-workspace)
+
+;;(use-package doom-themes)

@@ -79,7 +79,8 @@ Of the new, or upcoming, shiny things. When they are available, enable the right
 #+BEGIN_SRC emacs-lisp
   (set-face-attribute 'default nil :font "Fira Code" :height 150)
   ;; (load-theme 'modus-vivendi)
-  (load-theme 'wombat)
+  ;; (load-theme 'wombat)
+  (load-theme 'tsdh-dark)
 #+END_SRC
 
 ** Load env file, setup load-path
@@ -116,7 +117,6 @@ Of the new, or upcoming, shiny things. When they are available, enable the right
      (add-to-list 'load-path (concat *emacsd-dir* "site-lisp"))
      (load-env-file (concat *emacsd-dir* "env"))
    #+END_SRC
-
    
 ** Basic functions
 
@@ -129,10 +129,10 @@ Of the new, or upcoming, shiny things. When they are available, enable the right
     "Insert the current timestamp at the cursor position."
     (interactive)
     (insert (format-time-string "[%Y-%m-%d %a]")))
-(defun ut/date ()
-  "Insert the current date at the cursor position."
-  (interactive)
-  (insert (format-time-string "%Y-%m-%d")))
+  (defun ut/date ()
+    "Insert the current date at the cursor position."
+    (interactive)
+    (insert (format-time-string "%Y-%m-%d")))
 #+end_src
 
 
@@ -206,23 +206,23 @@ Github - [[https://github.com/emacs-dashboard/emacs-dashboard][https://github.co
    ;; Content is not centered by default. To center, set
   (setq
    dashboard-items '(
-		     (recents . 5)
-		     (projects . 5)
-		     (agenda . 5)
-		     (registers . 5))
+                     (recents . 5)
+                     (projects . 5)
+                     (agenda . 5)
+                     (registers . 5))
    dashboard-center-content t
    dashboard-set-heading-items t
    dashboard-set-file-icons t
    dashboard-set-navigator t
    dashboard-set-footer nil
+   dashboard-startup-banner 'logo
    )
 
 #+end_src
 
 
 #+BEGIN_SRC emacs-lisp
-(use-package dash-at-point
-  :bind ("C-c d" . dash-at-point))
+(use-package dash-at-point)
 #+END_SRC
 
 
@@ -239,7 +239,7 @@ We'll go with ivy
 
   ;; From
   ;; https://github.com/abo-abo/swiper/pull/1929#issuecomment-462828989
-  ;; Keep adding to history for quicker access of recently used commands
+  ;; Keep adding to history for quicker access to recently used commands
   (defun add-m-x-history ()
     (setq last-counsel-M-x-command (caar command-history)))
 
@@ -248,11 +248,8 @@ We'll go with ivy
   (setq ivy-use-virtual-buffers t)
   (setq enable-recursive-minibuffers t)
   (setq ivy-use-selectable-prompt t)
-  (global-set-key (kbd "C-s") 'swiper)
-  (global-set-key (kbd "C-c C-r") 'ivy-resume)
-  (global-set-key (kbd "M-x") 'counsel-M-x)
-  (global-set-key (kbd "<f2> u") 'counsel-unicode-char)
 #+END_SRC
+
 
 
 * LSP
@@ -297,7 +294,19 @@ We'll go with ivy
 
 * Java
 #+BEGIN_SRC emacs-lisp
+  (use-package lsp-java
+    :ensure t)
+
+  (add-hook 'java-mode-hook #'lsp)
 #+END_SRC
+
+
+* Python
+#+begin_src emacs-lisp
+  (use-package python-mode)
+  (use-package python-pytest)
+  (use-package pyvenv)
+#+end_src
 
 
 * Org Mode
@@ -335,7 +344,7 @@ We'll go with ivy
 #+end_src
 
 
-** Projects
+** Projects                                                      :shortcuts:
 #+begin_src emacs-lisp
   (use-package projectile
     :ensure t
@@ -343,31 +352,35 @@ We'll go with ivy
     (projectile-mode +1)
     :bind
     (:map projectile-mode-map
-          ("s-p" . projectile-command-map)
-          ("C-c p" . projectile-command-map)))
+          ("s-p" . projectile-command-map)))
 
 #+end_src
+
 
 ** Tabs
 #+begin_src emacs-lisp
   (use-package centaur-tabs
     :demand
     :config
-    (centaur-tabs-mode 1)
-    :bind
-    ("C-c w <left>" . centaur-tabs-backward)
-    ("C-c w <right>" . centaur-tabs-forward))
+    (centaur-tabs-mode 1))
 
   (setq centaur-tabs-style "bar")
 #+end_src
 
 
-* Shortcuts
+* Shortcuts                                                       :shortcuts:
 ** General utilities
 #+BEGIN_SRC emacs-lisp
+  (global-set-key (kbd "C-c d") 'dash-at-point)
+  (global-set-key (kbd "C-s") 'swiper)
+  (global-set-key (kbd "C-c C-r") 'ivy-resume)
+  (global-set-key (kbd "M-x") 'counsel-M-x)
+  (global-set-key (kbd "<f2> u") 'counsel-unicode-char)
+  (global-set-key (kbd "<f1> m") 'toggle-frame-maximized)
   (when (fboundp 'toggle-frame-fullscreen)
-  (global-set-key (kbd "<f11>") 'toggle-frame-fullscreen))
+    (global-set-key (kbd "<f1> f") 'toggle-frame-fullscreen))
 #+END_SRC
+
 
 ** Editing
 #+BEGIN_SRC emacs-lisp
@@ -381,8 +394,18 @@ We'll go with ivy
 #+END_SRC
 
 
-
-** Moving Across Windows
+** Spaces Navigation
 #+begin_src emacs-lisp
-(global-set-key (kbd "C-c w q") 'ace-window)
+  (global-set-key (kbd "C-c w <left>") 'centaur-tabs-backward)
+  (global-set-key (kbd "C-c w <right>") 'centaur-tabs-forward)
+  (global-set-key (kbd "C-c w q") 'ace-window)
+  (global-set-key (kbd "C-c w o") 'imenu)
+  (global-set-key (kbd "C-c t t") 'treemacs)
+  (global-set-key (kbd "C-c t w") 'treemacs-switch-workspace)
+#+end_src
+
+
+* Other Experimental Stuff
+#+begin_src emacs-lisp
+;;(use-package doom-themes)
 #+end_src
