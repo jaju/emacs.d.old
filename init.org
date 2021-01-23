@@ -82,8 +82,8 @@ Of the new, or upcoming, shiny things. When they are available, enable the right
 - A function - C-h f
 
 ** Load env file, setup load-path
-;; Trick copied from doom-emacs
    #+BEGIN_SRC emacs-lisp
+     ;; Trick copied from doom-emacs
      (defun load-env-file (file)
        (if (null (file-exists-p file))
            (signal 'file-error (list "No env vars file exists " file ". Create one with the `env` command and store the output in " (concat *emacsd-dir* "env")))
@@ -136,7 +136,7 @@ Of the new, or upcoming, shiny things. When they are available, enable the right
 
 
 * Packages
-** We'll first set the repository
+** We'll first set up the repositories
 #+BEGIN_SRC emacs-lisp
   ;; Initialize package sources
   (require 'package)

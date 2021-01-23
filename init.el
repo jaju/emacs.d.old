@@ -47,6 +47,7 @@
     (message "Native JSON is available")
   (message "Native JSON is *not* available"))
 
+;; Trick copied from doom-emacs
 (defun load-env-file (file)
   (if (null (file-exists-p file))
       (signal 'file-error (list "No env vars file exists " file ". Create one with the `env` command and store the output in " (concat *emacsd-dir* "env")))

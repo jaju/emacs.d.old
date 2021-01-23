@@ -1,0 +1,10 @@
+* About
+This is my /.emacs.d/ repository.
+
+The file [[file:init.el][init.el]] is generated from the org file [[file:init.org][init.org]], which is written in literate programming style.
+
+* Screenshot
+Currently, this file [[file:README.org][README.org]] looks like the following in *emacs*.
+
+#+attr_html: :width 1200 px
+[[file:images/README.org.png]]
