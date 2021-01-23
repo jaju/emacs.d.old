@@ -63,13 +63,15 @@
     ("^ *\\([-]\\) "
      (0 (prog1 () (compose-region (match-beginning 1) (match-end 1) "➤"))))))
 
+;; Picked from http://www.howardism.org/Technical/Emacs/orgmode-wordprocessor.html
+;; and https://zzamboni.org/post/beautifying-org-mode-in-emacs/
 (let* ((variable-tuple
         (cond ((x-list-fonts "Fira Code")       '(:font "Fira Code"))
               ((x-list-fonts "Lucida Grande")   '(:font "Lucida Grande"))
               ((x-list-fonts "Verdana")         '(:font "Verdana"))
               ((x-family-fonts "Sans Serif")    '(:family "Sans Serif"))
-              (nil (warn "Cannot find a Sans Serif Font.  Install Source Sans Pro."))))
-              (topline            `(:inherit variable-pitch :weight bold :foreground "yellow"))
+              (nil (warn "Cannot find any of the required fonts."))))
+       (topline            `(:inherit variable-pitch :weight bold :foreground "yellow"))
        (headline           `(:inherit variable-pitch :weight semi-bold :foreground "white")))
 
   (custom-theme-set-faces

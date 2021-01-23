@@ -19,7 +19,13 @@
 ;; Turn off the following modes
 (dolist (mode '(tooltip-mode tool-bar-mode scroll-bar-mode))
   (when (fboundp mode) (funcall mode -1)))
-(set-fringe-mode 10) ;; Shift a bit from the edges
+
+;; We don't need no suspends. Or Undo-s.
+(global-unset-key (kbd "C-z"))
+(global-unset-key (kbd "s-z"))
+
+
+(set-fringe-mode 10) 
 (delete-selection-mode t) ;; Delete when beginning to type when text selected.
 (show-paren-mode)
 
@@ -188,10 +194,11 @@
 (setq enable-recursive-minibuffers t)
 (setq ivy-use-selectable-prompt t)
 
+;; More ideas from
+;; https://blog.sumtypeofway.com/posts/emacs-config.html
 (use-package which-key
   :config
   (which-key-mode))
-                                        ; https://blog.sumtypeofway.com/posts/emacs-config.html
 (use-package yasnippet
   :defer 3
   :diminish yas-minor-mode
@@ -207,6 +214,8 @@
 (use-package lsp-ui
   :commands lsp-ui-mode
   :after lsp-mode)
+(use-package company)
+(use-package company-lsp)
 (use-package lsp-ivy
   :commands lsp-ivy-workspace-symbol
   :after (ivy lsp-mode))
@@ -215,6 +224,11 @@
 (use-package dap-mode)
 
 (load "init-clojure")
+
+(use-package rainbow-delimiters)
+(add-hook 'emacs-lisp-mode-hook 'rainbow-delimiters-mode)
+(add-hook 'clojure-mode-hook 'rainbow-delimiters-mode)
+(add-hook 'clojurescript-mode-hook 'rainbow-delimiters-mode)
 
 (use-package lsp-java
   :ensure t)
@@ -262,6 +276,7 @@
 (when (fboundp 'toggle-frame-maximized)
   (global-set-key (kbd "M-s-m") 'toggle-frame-maximized))
 (global-set-key (kbd "M-s-o") 'imenu)
+(add-hook 'after-init-hook 'global-company-mode)
 
 (global-set-key (kbd "s-2")
                 (defhydra s-2-actions ()
