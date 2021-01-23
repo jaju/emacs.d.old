@@ -273,9 +273,6 @@
 (global-set-key (kbd "M-x") 'counsel-M-x)
 (global-set-key (kbd "C-c d") 'dash-at-point)
 (global-set-key (kbd "C-c C-r") 'ivy-resume)
-(when (fboundp 'toggle-frame-maximized)
-  (global-set-key (kbd "M-s-m") 'toggle-frame-maximized))
-(global-set-key (kbd "M-s-o") 'imenu)
 (add-hook 'after-init-hook 'global-company-mode)
 
 (global-set-key (kbd "s-2")
@@ -297,6 +294,9 @@
 (global-set-key (kbd "M-s-<right>") 'windmove-right)
 (global-set-key (kbd "M-s-<up>") 'windmove-up)
 (global-set-key (kbd "M-s-<down>") 'windmove-down)
+(global-set-key (kbd "M-s-o") 'counsel-imenu)
+(when (fboundp 'toggle-frame-maximized)
+  (global-set-key (kbd "M-s-m") 'toggle-frame-maximized))
 
 (global-set-key (kbd "s-w")
                 (defhydra window-actions ()

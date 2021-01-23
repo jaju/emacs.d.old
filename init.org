@@ -83,7 +83,8 @@ Of the new, or upcoming, shiny things. When they are available, enable the right
     (message "Native JSON is *not* available"))
 #+END_SRC
 
-*** Tips: To describe
+*** Tips:
+To describe
 - A variable - C-h v
 - A function - C-h f
 
@@ -419,11 +420,9 @@ We will install rainbow-delimiters and enable it for Clojure
   (global-set-key (kbd "M-x") 'counsel-M-x)
   (global-set-key (kbd "C-c d") 'dash-at-point)
   (global-set-key (kbd "C-c C-r") 'ivy-resume)
-  (when (fboundp 'toggle-frame-maximized)
-    (global-set-key (kbd "M-s-m") 'toggle-frame-maximized))
-  (global-set-key (kbd "M-s-o") 'imenu)
   (add-hook 'after-init-hook 'global-company-mode)
 #+END_SRC
+
 
 ** s-2
 #+begin_src emacs-lisp
@@ -450,12 +449,17 @@ We will install rainbow-delimiters and enable it for Clojure
 
 ** Spaces Navigation
 
-*** Move across windows - M-s
+*** M-s - Quick motion actions
+Move across windows, structural navigation, window resizing
 #+begin_src emacs-lisp
   (global-set-key (kbd "M-s-<left>") 'windmove-left)
   (global-set-key (kbd "M-s-<right>") 'windmove-right)
   (global-set-key (kbd "M-s-<up>") 'windmove-up)
   (global-set-key (kbd "M-s-<down>") 'windmove-down)
+  (global-set-key (kbd "M-s-o") 'counsel-imenu)
+  (when (fboundp 'toggle-frame-maximized)
+    (global-set-key (kbd "M-s-m") 'toggle-frame-maximized))
+
 #+end_src
 
 *** Window actions - s-w
