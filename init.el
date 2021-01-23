@@ -4,7 +4,7 @@
 (defvar *emacsd-system-name* (system-name))
 (defvar *emacsd-version* "0.0.0-SNAPSHOT")
 (defvar *emacsd-dir*
-  (file-name-directory (or load-file-name 
+  (file-name-directory (or load-file-name
                            (buffer-file-name))))
 (setq custom-file (concat *emacsd-dir* "custom.el"))
 
@@ -23,14 +23,17 @@
 (delete-selection-mode t) ;; Delete when beginning to type when text selected.
 (show-paren-mode)
 
+;; Handle URLs anywhere with the super-mouseclick combo
+(global-set-key (kbd "s-<mouse-1>") 'browse-url)
+
 ;; Mac-specific settings
 ;; (when (eq system-type 'darwin)
-  ;; (setq mac-command-modifier 'meta))
+;; (setq mac-command-modifier 'meta))
 
 (setq initial-frame-alist
-      '((top . 15)
-        (left . 15)
-        (width . 171)
+      '((top . 10)
+        (left . 10)
+        (width . 150)
         (height . 54)))
 
 ;; https://www.masteringemacs.org/article/speed-up-emacs-libjansson-native-elisp-compilation
@@ -44,14 +47,9 @@
     (message "Native JSON is available")
   (message "Native JSON is *not* available"))
 
-(set-face-attribute 'default nil :font "Fira Code" :height 150)
-;; (load-theme 'modus-vivendi)
-;; (load-theme 'wombat)
-(load-theme 'tsdh-dark)
-
 (defun load-env-file (file)
   (if (null (file-exists-p file))
-      (signal 'file-error (list "No env vars file exists " file))
+      (signal 'file-error (list "No env vars file exists " file ". Create one with the `env` command and store the output in " (concat *emacsd-dir* "env")))
     (when-let
         (env
          (with-temp-buffer
@@ -136,6 +134,8 @@
      treemacs-width 40))
   )
 
+(use-package hydra)
+
 (use-package page-break-lines)
  (use-package all-the-icons)
  (use-package dashboard
@@ -148,7 +148,6 @@
  dashboard-items '(
                    (recents . 5)
                    (projects . 5)
-                   (agenda . 5)
                    (registers . 5))
  dashboard-center-content t
  dashboard-set-heading-items t
@@ -159,6 +158,14 @@
  )
 
 (use-package dash-at-point)
+
+(use-package color-theme-sanityinc-tomorrow)
+
+(set-face-attribute 'default nil :font "Fira Code" :height 210)
+;; (load-theme 'modus-vivendi)
+;; (load-theme 'wombat)
+;; (load-theme 'tsdh-dark)
+(load-theme 'sanityinc-tomorrow-bright)
 
 (use-package smex) ;; counsel-M-x uses this to remember last command
 (use-package swiper)
@@ -247,14 +254,20 @@
 
 (setq centaur-tabs-style "bar")
 
-(global-set-key (kbd "C-c d") 'dash-at-point)
 (global-set-key (kbd "C-s") 'swiper)
-(global-set-key (kbd "C-c C-r") 'ivy-resume)
 (global-set-key (kbd "M-x") 'counsel-M-x)
-(global-set-key (kbd "<f2> u") 'counsel-unicode-char)
-(global-set-key (kbd "<f1> m") 'toggle-frame-maximized)
-(when (fboundp 'toggle-frame-fullscreen)
-  (global-set-key (kbd "<f1> f") 'toggle-frame-fullscreen))
+(global-set-key (kbd "C-c d") 'dash-at-point)
+(global-set-key (kbd "C-c C-r") 'ivy-resume)
+(when (fboundp 'toggle-frame-maximized)
+  (global-set-key (kbd "M-s-m") 'toggle-frame-maximized))
+(global-set-key (kbd "M-s-o") 'imenu)
+
+(global-set-key (kbd "s-2")
+                (defhydra s-2-actions ()
+                  "Super-2 actions"
+                  ("u" counsel-unicode-char :color red)
+                  ("+" text-scale-increase)
+                  ("-" text-scale-decrease)))
 
 (defun backward-kill-word-or-kill-region (&optional arg)
   (interactive "p")
@@ -264,11 +277,24 @@
 
 (global-set-key (kbd "C-w") 'backward-kill-word-or-kill-region)
 
-(global-set-key (kbd "C-c w <left>") 'centaur-tabs-backward)
-(global-set-key (kbd "C-c w <right>") 'centaur-tabs-forward)
-(global-set-key (kbd "C-c w q") 'ace-window)
-(global-set-key (kbd "C-c w o") 'imenu)
-(global-set-key (kbd "C-c t t") 'treemacs)
-(global-set-key (kbd "C-c t w") 'treemacs-switch-workspace)
+(global-set-key (kbd "M-s-<left>") 'windmove-left)
+(global-set-key (kbd "M-s-<right>") 'windmove-right)
+(global-set-key (kbd "M-s-<up>") 'windmove-up)
+(global-set-key (kbd "M-s-<down>") 'windmove-down)
+
+(global-set-key (kbd "s-w")
+                (defhydra window-actions ()
+                  "Window actions"
+                  ("c" ace-window "switch to window")
+                  ("t" treemacs "toggle treemacs")
+                  ("w" treemacs-switch-workspace "switch workspace")
+                  ("e" treemacs-edit-workspaces "edit workspaces")))
+
+(global-set-key (kbd "s-r")
+                (defhydra org-roam-actions (:color blue)
+                  "Org roam actiions"
+                  ("i" org-roam-insert "insert")
+                  ("c" org-roam-capture "capture")
+                  ("j" org-roam-jump-to-index "jump to index")))
 
 ;;(use-package doom-themes)
