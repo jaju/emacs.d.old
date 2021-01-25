@@ -5,13 +5,16 @@
 (use-package flycheck-clj-kondo
   :ensure t)
 (use-package cider
-  :ensure t)
+  :ensure t
+  :config
+  (add-hook 'cider-mode-hook #'eldoc-mode))
 (use-package inf-clojure
   :ensure t)
 (use-package clojure-mode
   :ensure t
   :config
   (require 'flycheck-clj-kondo))
+(use-package clj-refactor)
 
 (defun clj/pretty-fns ()
   (font-lock-add-keywords

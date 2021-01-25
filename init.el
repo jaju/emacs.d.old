@@ -2,7 +2,7 @@
 ;; Edit the source org-mode file and re-export.
 (defvar *emacsd-start-time* (current-time))
 (defvar *emacsd-system-name* (system-name))
-(defvar *emacsd-version* "0.0.0-SNAPSHOT")
+(defvar *emacsd-version* "0.0.0")
 (defvar *emacsd-dir*
   (file-name-directory (or load-file-name
                            (buffer-file-name))))
@@ -16,31 +16,31 @@
       tab-always-indent 'complete
       gc-cons-threshold 10000000
       read-process-output-max (* 1024 1024))
-;; Turn off the following modes
-(dolist (mode '(tooltip-mode tool-bar-mode scroll-bar-mode))
-  (when (fboundp mode) (funcall mode -1)))
 
-;; We don't need no suspends. Or Undo-s.
-(global-unset-key (kbd "C-z"))
-(global-unset-key (kbd "s-z"))
-
-
-(set-fringe-mode 10) 
+(set-fringe-mode 10)
 (delete-selection-mode t) ;; Delete when beginning to type when text selected.
 (show-paren-mode)
-
-;; Handle URLs anywhere with the super-mouseclick combo
-(global-set-key (kbd "s-<mouse-1>") 'browse-url)
 
 ;; Mac-specific settings
 ;; (when (eq system-type 'darwin)
 ;; (setq mac-command-modifier 'meta))
 
-(setq initial-frame-alist
-      '((top . 10)
-        (left . 10)
-        (width . 150)
-        (height . 54)))
+;; The use of display-graphic-p is frivolous, but only here for the record that
+;; emacs has all kinds of functions. So, it serves as a record; a reminder.
+(if (display-graphic-p)
+    (progn
+      ;; Set the on-startup frame size
+      (setq initial-frame-alist
+            '((top . 10)
+              (left . 10)
+              (width . 150)
+              (height . 54)))
+      ;; Handle URLs anywhere with the super-mouseclick combo
+      (global-set-key (kbd "s-<mouse-1>") 'browse-url)
+      ;; Turn off the following modes
+      (dolist (mode '(tooltip-mode tool-bar-mode scroll-bar-mode))
+        (when (fboundp mode) (funcall mode -1)))
+      ))
 
 ;; https://www.masteringemacs.org/article/speed-up-emacs-libjansson-native-elisp-compilation
 (if (and (fboundp 'native-comp-available-p)
@@ -168,7 +168,7 @@
 
 (use-package color-theme-sanityinc-tomorrow)
 
-(set-face-attribute 'default nil :font "Fira Code" :height 210)
+(set-face-attribute 'default nil :font "Fira Code" :height 160)
 ;; (load-theme 'modus-vivendi)
 ;; (load-theme 'wombat)
 ;; (load-theme 'tsdh-dark)
@@ -239,6 +239,13 @@
 (use-package python-pytest)
 (use-package pyvenv)
 
+(use-package lsp-python-ms
+  :ensure t
+  :init (setq lsp-python-ms-executable (executable-find "python-language-server"))
+  :hook (python-mode . (lambda ()
+                         (require 'lsp-python-ms)
+                         (lsp))))
+
 (load "init-org")
 
 (use-package paredit)
@@ -269,6 +276,10 @@
 
 (setq centaur-tabs-style "bar")
 
+;; We don't need no suspends. Or Undo-s.
+(global-unset-key (kbd "C-z"))
+(global-unset-key (kbd "s-z"))
+
 (global-set-key (kbd "C-s") 'swiper)
 (global-set-key (kbd "M-x") 'counsel-M-x)
 (global-set-key (kbd "C-c d") 'dash-at-point)
@@ -276,11 +287,13 @@
 (add-hook 'after-init-hook 'global-company-mode)
 
 (global-set-key (kbd "s-2")
-                (defhydra s-2-actions ()
+                (defhydra s-2-actions (:color amaranth)
                   "Super-2 actions"
-                  ("u" counsel-unicode-char :color red)
-                  ("+" text-scale-increase)
-                  ("-" text-scale-decrease)))
+                  ("u" counsel-unicode-char "Unicode characters" :color red)
+                  ("+" text-scale-increase "Zoom in")
+                  ("=" text-scale-increase "Zoom in")
+                  ("-" text-scale-decrease "Zoom out")
+                  ("q" nil "quit" :color blue)))
 
 (defun backward-kill-word-or-kill-region (&optional arg)
   (interactive "p")

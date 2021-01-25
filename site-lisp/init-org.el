@@ -13,12 +13,6 @@
   (add-hook 'org-mode-hook (lambda () (org-bullets-mode 1))))
 
 (add-hook 'org-mode-hook 'variable-pitch-mode)
-;;;;;;;;;;;;;;
-;;; Behaviours
-;;;;;;;;;;;;;;
-
-(add-to-list 'auto-mode-alist '("\\.org$" . org-mode))
-
 
 (setq org-directory "~/.org/" ;; Places where the agenda files exist.
       org-agenda-files '("~/.org/agenda")
@@ -30,7 +24,6 @@
       org-return-follows-link t
       org-hide-emphasis-markers nil)
 
-
 (setq org-todo-keywords
       '((sequence "TODO" "WAITING" "|" "DONE" "DELEGATED")  ;; Tasks
         (sequence "SCHEDULE" "|" "MEETING-OVER")            ;; Meetings
@@ -40,21 +33,6 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Fonts, styles, sizes for the headlines, tags
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-(custom-theme-set-faces
-   'user
-   '(org-block ((t (:inherit fixed-pitch))))
-   '(org-date ((t (:inherit (default fixed-pitch) :height 1.2 :background "#333"))))
-   '(org-code ((t (:inherit (shadow fixed-pitch)))))
-   '(org-document-info ((t (:foreground "dark orange"))))
-   '(org-document-info-keyword ((t (:inherit (shadow fixed-pitch)))))
-   '(org-indent ((t (:inherit (org-hide fixed-pitch)))))
-   '(org-link ((t (:foreground "#ffeeaa" :underline t))))
-   '(org-meta-line ((t (:inherit (font-lock-comment-face fixed-pitch)))))
-   '(org-property-value ((t (:inherit fixed-pitch))) t)
-   '(org-special-keyword ((t (:inherit (font-lock-comment-face fixed-pitch)))))
-   '(org-table ((t (:inherit fixed-pitch :foreground "#83a598"))))
-   '(org-verbatim ((t (:inherit (shadow fixed-pitch))))))
 
 (font-lock-add-keywords 'org-mode
   '(("^\\*+ "
@@ -87,19 +65,39 @@
    `(org-level-1 ((t (,@topline ,@variable-tuple :height 1.7))))
    `(org-document-title ((t (,@headline ,@variable-tuple :height 1.5 :underline nil))))))
 
+(custom-theme-set-faces
+   'user
+   '(org-block ((t (:inherit fixed-pitch))))
+   '(org-date ((t (:inherit (default fixed-pitch) :height 1.2 :background "#333"))))
+   '(org-code ((t (:inherit (shadow fixed-pitch)))))
+   '(org-document-info ((t (:foreground "dark orange"))))
+   '(org-document-info-keyword ((t (:inherit (shadow fixed-pitch)))))
+   '(org-indent ((t (:inherit (org-hide fixed-pitch)))))
+   '(org-link ((t (:foreground "#ffeeaa" :underline t))))
+   '(org-meta-line ((t (:inherit (font-lock-comment-face fixed-pitch)))))
+   '(org-property-value ((t (:inherit fixed-pitch))) t)
+   '(org-special-keyword ((t (:inherit (font-lock-comment-face fixed-pitch)))))
+   '(org-table ((t (:inherit fixed-pitch :foreground "#83a598"))))
+   '(org-verbatim ((t (:inherit (shadow fixed-pitch))))))
 
+;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Org-babel and Clojure
+;;;;;;;;;;;;;;;;;;;;;;;;
 (require 'ob-clojure)
 (require 'cider)
 (setq org-babel-clojure-backend 'cider)
 
-;; HTTP interactions
+;;;;;;;;;;;;;;;;;;;;;;;
+;; HTTP interactions ;;
+;;;;;;;;;;;;;;;;;;;;;;;
 (use-package ob-http)
 (use-package restclient)
 (use-package ob-restclient)
 (use-package plantuml-mode)
 
-;; Moar languages
+;;;;;;;;;;;;;;;;;;;;
+;; Moar languages ;;
+;;;;;;;;;;;;;;;;;;;;
 (require 'ob-js)
 (org-babel-do-load-languages
  'org-babel-load-languages
@@ -120,10 +118,9 @@
 (setq org-confirm-babel-evaluate nil)
 
 ;; More from http://fgiasson.com/blog/index.php/2016/04/05/using-clojure-in-org-mode-and-implementing-asynchronous-processing/
-(org-defkey org-mode-map "\C-x\C-e" 'cider-eval-last-sexp)
-(org-defkey org-mode-map "\C-c\C-d" 'cider-doc)
+;; (org-defkey org-mode-map "\C-x\C-e" 'cider-eval-last-sexp)
+;; (org-defkey org-mode-map "\C-c\C-d" 'cider-doc)
 
-;; END
 
 (use-package ox-hugo
   :ensure t
@@ -262,7 +259,9 @@ Returns the list of tangled files."
   (org-mode-restart))
 
 (add-hook 'org-mode-hook
-	  (lambda () (subword-mode 1)))
+	  (lambda ()
+	    (subword-mode 1)
+	    (turn-on-visual-line-mode)))
 
 (use-package org-roam)
 
@@ -273,6 +272,8 @@ Returns the list of tangled files."
 (setq org-roam-index-file "~/.org/roam/index.org")
 
 (add-hook 'after-init-hook 'org-roam-mode)
+
+(add-to-list 'auto-mode-alist '("\\.org$" . org-mode))
 
 (provide 'init-org)
 ;;; init-org.el ends here
