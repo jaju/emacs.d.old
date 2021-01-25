@@ -54,7 +54,7 @@
 
   (custom-theme-set-faces
    'user
-   `(org-tag ((t (,@headline ,@variable-tuple :height 0.8 :foreground "yellow" :background "#333" :box t :width semi-condensed))))
+   `(org-tag ((t (,@headline ,@variable-tuple :height 0.6 :foreground "yellow" :background "#333" :box t :width semi-condensed))))
    `(org-level-8 ((t (,@headline ,@variable-tuple))))
    `(org-level-7 ((t (,@headline ,@variable-tuple))))
    `(org-level-6 ((t (,@headline ,@variable-tuple))))
