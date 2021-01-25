@@ -1,18 +1,18 @@
 * About
 This is my /.emacs.d/ repository.
 
-The file [[file:init.el][init.el]] is generated from the org file [[file:init.org][init.org]], which is written in literate programming style.
+The file [[file:core.el][core.el]] is generated from the org file [[file:core.org][core.org]], which is written in literate programming style.
 
 * Installation
 Note: *YMMV*
 
 1. Clone the repository
-   #+begin_src  bash
-     git clone https://github.com/jaju/emacs.d.git ~/.emacs.d
+ #+begin_src  bash
+   git clone https://github.com/jaju/emacs.d.git ~/.emacs.d
 #+end_src
 
 2. Create the /env/ file as follows in the ~/.emacs.d folder
-   #+begin_src bash
+ #+begin_src bash
   env > ~/.emacs.d/env
 #+end_src
 
