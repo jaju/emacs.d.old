@@ -118,7 +118,7 @@ To describe
      (getenv "PATH")
    #+END_SRC
 
-   
+
 * Basic functions
 
 ** Utility functions
@@ -179,6 +179,11 @@ Makes the modeline look interesting.
   (doom-modeline-mode)
 #+END_SRC
 
+#+BEGIN_SRC emacs-lisp
+  (use-package dash-at-point)
+  (use-package magit)
+#+END_SRC
+
 Enable syntax-checking in various modes
 #+BEGIN_SRC emacs-lisp
   (use-package flycheck
@@ -191,15 +196,20 @@ Enable syntax-checking in various modes
     :ensure t
     :defer t
     :init
-    (with-eval-after-load 'winum
-      (define-key winum-keymap (kbd "M-0") #'treemacs-select-window))
+    (progn
+      (with-eval-after-load 'winum
+        (define-key winum-keymap (kbd "M-0") #'treemacs-select-window)))
     :config
     (progn
       (setq
        treemacs-collapse-dirs (if treemacs-python-executable 3 0)
        treemacs-width 40))
     )
+  (use-package treemacs-magit)
 #+END_SRC
+
+#+RESULTS:
+: t
 
 Hydra. /Sirf naam hi kaafi hai/.
 #+begin_src emacs-lisp
@@ -232,11 +242,6 @@ Github - [[https://github.com/emacs-dashboard/emacs-dashboard][https://github.co
    )
 
 #+end_src
-
-
-#+BEGIN_SRC emacs-lisp
-(use-package dash-at-point)
-#+END_SRC
 
 
 * Fonts and themes
@@ -324,7 +329,7 @@ We'll go with ivy
   (load "init-clojure")
 #+END_SRC
 
-We will install rainbow-delimiters and enable it for Clojure
+We will install rainbow-delimiters and enable it for our LISPs.
 #+begin_src emacs-lisp
   (use-package rainbow-delimiters)
   (add-hook 'emacs-lisp-mode-hook 'rainbow-delimiters-mode)
@@ -339,6 +344,10 @@ We will install rainbow-delimiters and enable it for Clojure
     :ensure t)
 
   (add-hook 'java-mode-hook #'lsp)
+
+  ;; Let's also syntax some groovy, kotlin and scala
+  (use-package groovy-mode)
+  (use-package kotlin-mode)
 #+END_SRC
 
 
@@ -360,7 +369,7 @@ We will install rainbow-delimiters and enable it for Clojure
 * Org Mode
 ** Useful links
 - Face attributes - [[https://www.gnu.org/software/emacs/manual/html_node/elisp/Face-Attributes.html][link]]
-  
+
 ** Notes
 - The /htmlize/ package is required to ensure the exported HTML from org-mode files has syntax-highlighted source-code blocks.
 
@@ -436,6 +445,7 @@ Some better replacements
   (global-set-key (kbd "M-x") 'counsel-M-x)
   (global-set-key (kbd "C-c d") 'dash-at-point)
   (global-set-key (kbd "C-c C-r") 'ivy-resume)
+  (global-set-key (kbd "C-x t") 'ut/today)
   (add-hook 'after-init-hook 'global-company-mode)
 #+END_SRC
 
@@ -451,6 +461,8 @@ Unicode, text-size actions...
                     ("=" text-scale-increase "Zoom in")
                     ("-" text-scale-decrease "Zoom out")
                     ("q" nil "quit" :color blue)))
+
+  (global-set-key (kbd "s-n") #'make-frame)
 #+end_src
 
 

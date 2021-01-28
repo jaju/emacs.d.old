@@ -8,12 +8,7 @@
 
 (require 'org)
 
-(use-package org-bullets
-  :config
-  (add-hook 'org-mode-hook (lambda () (org-bullets-mode 1))))
-
-(add-hook 'org-mode-hook 'variable-pitch-mode)
-
+;; Setup configuration
 (setq org-directory "~/.org/" ;; Places where the agenda files exist.
       org-agenda-files '("~/.org/agenda")
       org-log-done t ;; This sets timestamps on tasks when finished.
@@ -30,65 +25,17 @@
         (sequence "RAW" "REFINE" "|" "IGNORE" "RECORDED"))) ;; Ideas
 
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; Fonts, styles, sizes for the headlines, tags
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-(font-lock-add-keywords 'org-mode
-  '(("^\\*+ "
-     ":" nil nil
-     (0 (put-text-property (match-beginning 0) (match-end 0) 'display " ")))
-    ("^ *\\([-]\\) "
-     (0 (prog1 () (compose-region (match-beginning 1) (match-end 1) "➤"))))))
-
-;; Picked from http://www.howardism.org/Technical/Emacs/orgmode-wordprocessor.html
-;; and https://zzamboni.org/post/beautifying-org-mode-in-emacs/
-(let* ((variable-tuple
-        (cond ((x-list-fonts "Fira Code")       '(:font "Fira Code"))
-              ((x-list-fonts "Lucida Grande")   '(:font "Lucida Grande"))
-              ((x-list-fonts "Verdana")         '(:font "Verdana"))
-              ((x-family-fonts "Sans Serif")    '(:family "Sans Serif"))
-              (nil (warn "Cannot find any of the required fonts."))))
-       (topline            `(:inherit variable-pitch :weight bold :foreground "yellow"))
-       (headline           `(:inherit variable-pitch :weight semi-bold :foreground "white")))
-
-  (custom-theme-set-faces
-   'user
-   `(org-tag ((t (,@headline ,@variable-tuple :height 0.6 :foreground "yellow" :background "#333" :box t :width semi-condensed))))
-   `(org-level-8 ((t (,@headline ,@variable-tuple))))
-   `(org-level-7 ((t (,@headline ,@variable-tuple))))
-   `(org-level-6 ((t (,@headline ,@variable-tuple))))
-   `(org-level-5 ((t (,@headline ,@variable-tuple))))
-   `(org-level-4 ((t (,@headline ,@variable-tuple :height 1.1))))
-   `(org-level-3 ((t (,@headline ,@variable-tuple :height 1.2))))
-   `(org-level-2 ((t (,@headline ,@variable-tuple :height 1.4))))
-   `(org-level-1 ((t (,@topline ,@variable-tuple :height 1.7))))
-   `(org-document-title ((t (,@headline ,@variable-tuple :height 1.5 :underline nil))))))
-
-(custom-theme-set-faces
-   'user
-   '(org-block ((t (:inherit fixed-pitch))))
-   '(org-date ((t (:inherit (default fixed-pitch) :height 1.2 :background "#333"))))
-   '(org-code ((t (:inherit (shadow fixed-pitch)))))
-   '(org-document-info ((t (:foreground "dark orange"))))
-   '(org-document-info-keyword ((t (:inherit (shadow fixed-pitch)))))
-   '(org-indent ((t (:inherit (org-hide fixed-pitch)))))
-   '(org-link ((t (:foreground "#ffeeaa" :underline t))))
-   '(org-meta-line ((t (:inherit (font-lock-comment-face fixed-pitch)))))
-   '(org-property-value ((t (:inherit fixed-pitch))) t)
-   '(org-special-keyword ((t (:inherit (font-lock-comment-face fixed-pitch)))))
-   '(org-table ((t (:inherit fixed-pitch :foreground "#83a598"))))
-   '(org-verbatim ((t (:inherit (shadow fixed-pitch))))))
+;; Org-babel
 
 ;;;;;;;;;;;;;;;;;;;;;;;;
-;; Org-babel and Clojure
+;; Clojure
 ;;;;;;;;;;;;;;;;;;;;;;;;
 (require 'ob-clojure)
 (require 'cider)
 (setq org-babel-clojure-backend 'cider)
 
 ;;;;;;;;;;;;;;;;;;;;;;;
-;; HTTP interactions ;;
+;; HTTP interactions
 ;;;;;;;;;;;;;;;;;;;;;;;
 (use-package ob-http)
 (use-package restclient)
@@ -96,7 +43,7 @@
 (use-package plantuml-mode)
 
 ;;;;;;;;;;;;;;;;;;;;
-;; Moar languages ;;
+;; Moar languages
 ;;;;;;;;;;;;;;;;;;;;
 (require 'ob-js)
 (org-babel-do-load-languages
@@ -121,6 +68,10 @@
 ;; (org-defkey org-mode-map "\C-x\C-e" 'cider-eval-last-sexp)
 ;; (org-defkey org-mode-map "\C-c\C-d" 'cider-doc)
 
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Publishing
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (use-package ox-hugo
   :ensure t
@@ -202,7 +153,6 @@
          :headline-levels 4
          :publishing-function org-reveal-export-to-html)))
 
-(define-key global-map (kbd "\C-xt") 'ut/today)
 
 (defun directory-files-recursive (directory match maxdepth)
   "List files in DIRECTORY and in its sub-directories.
@@ -249,6 +199,85 @@ Returns the list of tangled files."
 (use-package htmlize
   :ensure t)
 
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Capturing Knowledge
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(setq org-capture-templates
+      '(("t" "Todo" entry (file+headline "~/.org/gtd.org" "Tasks")
+	 "* TODO %?\n %i\n %a")
+	("j" "Journal" entry (file+datetree "~/.org/journal.org")
+	 "* %?\nEntered on %U\n  %i\n  %a")))
+
+(use-package org-roam)
+
+(setq org-roam-directory "~/.org/roam/")
+(if (not (file-directory-p org-roam-directory))
+    (make-directory org-roam-directory))
+(setq org-roam-db-location "~/.org/roam/org-roam.db")
+(setq org-roam-index-file "~/.org/roam/index.org")
+
+(add-hook 'after-init-hook 'org-roam-mode)
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; LOOK n FEEL
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Fonts, styles, sizes for the headlines, tags
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(use-package org-bullets
+  :config
+  (add-hook 'org-mode-hook (lambda () (org-bullets-mode 1))))
+
+(add-hook 'org-mode-hook 'variable-pitch-mode)
+
+(font-lock-add-keywords 'org-mode
+			'(("^\\*+ "
+			   ":" nil nil
+			   (0 (put-text-property (match-beginning 0) (match-end 0) 'display " ")))
+			  ("^ *\\([-]\\) "
+			   (0 (prog1 () (compose-region (match-beginning 1) (match-end 1) "➤"))))))
+
+;; Picked from http://www.howardism.org/Technical/Emacs/orgmode-wordprocessor.html
+;; and https://zzamboni.org/post/beautifying-org-mode-in-emacs/
+(let* ((variable-tuple
+        (cond ((x-list-fonts "Fira Code")       '(:font "Fira Code"))
+              ((x-list-fonts "Lucida Grande")   '(:font "Lucida Grande"))
+              ((x-list-fonts "Verdana")         '(:font "Verdana"))
+              ((x-family-fonts "Sans Serif")    '(:family "Sans Serif"))
+              (nil (warn "Cannot find any of the required fonts."))))
+       (topline            `(:inherit variable-pitch :weight bold :foreground "yellow"))
+       (headline           `(:inherit variable-pitch :weight semi-bold :foreground "white")))
+
+  (custom-theme-set-faces
+   'user
+   `(org-tag ((t (,@headline ,@variable-tuple :height 0.6 :foreground "yellow" :background "#333" :box t :width semi-condensed))))
+   `(org-level-8 ((t (,@headline ,@variable-tuple))))
+   `(org-level-7 ((t (,@headline ,@variable-tuple))))
+   `(org-level-6 ((t (,@headline ,@variable-tuple))))
+   `(org-level-5 ((t (,@headline ,@variable-tuple))))
+   `(org-level-4 ((t (,@headline ,@variable-tuple :height 1.1))))
+   `(org-level-3 ((t (,@headline ,@variable-tuple :height 1.2))))
+   `(org-level-2 ((t (,@headline ,@variable-tuple :height 1.4))))
+   `(org-level-1 ((t (,@topline ,@variable-tuple :height 1.7))))
+   `(org-document-title ((t (,@headline ,@variable-tuple :height 1.7 :underline nil))))))
+
+;; Faces for other (non-title) elements
+(custom-theme-set-faces
+   'user
+   '(org-block ((t (:inherit fixed-pitch))))
+   '(org-date ((t (:inherit (default fixed-pitch) :height 1.2 :background "#333"))))
+   '(org-code ((t (:inherit (shadow fixed-pitch)))))
+   '(org-document-info ((t (:foreground "dark orange"))))
+   '(org-document-info-keyword ((t (:inherit (shadow fixed-pitch)))))
+   '(org-indent ((t (:inherit (org-hide fixed-pitch)))))
+   '(org-link ((t (:foreground "#ffeeaa" :underline t))))
+   '(org-meta-line ((t (:inherit (font-lock-comment-face fixed-pitch)))))
+   '(org-property-value ((t (:inherit fixed-pitch))) t)
+   '(org-special-keyword ((t (:inherit (font-lock-comment-face fixed-pitch)))))
+   '(org-table ((t (:inherit fixed-pitch :foreground "#83a598"))))
+   '(org-verbatim ((t (:inherit (shadow fixed-pitch))))))
+
 ;; From https://stackoverflow.com/questions/10969617/hiding-markup-elements-in-org-mode
 (defun org-toggle-emphasis ()
   "Toggle hiding/showing of org emphasize markers."
@@ -263,15 +292,6 @@ Returns the list of tangled files."
 	    (subword-mode 1)
 	    (turn-on-visual-line-mode)))
 
-(use-package org-roam)
-
-(setq org-roam-directory "~/.org/roam/")
-(if (not (file-directory-p org-roam-directory))
-    (make-directory org-roam-directory))
-(setq org-roam-db-location "~/.org/roam/org-roam.db")
-(setq org-roam-index-file "~/.org/roam/index.org")
-
-(add-hook 'after-init-hook 'org-roam-mode)
 
 (add-to-list 'auto-mode-alist '("\\.org$" . org-mode))
 
