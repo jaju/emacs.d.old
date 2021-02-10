@@ -192,7 +192,7 @@ Returns the list of tangled files."
           (directory-files-recursive (file-name-directory (buffer-file-name)) "\\.org$" 20)))
 
 ;; PlantUML
-(setq org-plantuml-jar-path (expand-file-name "/usr/local/Cellar/plantuml/1.2021.0/libexec/plantuml.jar"))
+(setq org-plantuml-jar-path (expand-file-name "/usr/local/Cellar/plantuml/1.2021.1/libexec/plantuml.jar"))
 (add-to-list 'org-src-lang-modes '("plantuml" . plantuml))
 ;(org-babel-do-load-languages 'org-babel-load-languages '((plantuml . t)))
 
@@ -246,7 +246,7 @@ Returns the list of tangled files."
               ((x-list-fonts "Verdana")         '(:font "Verdana"))
               ((x-family-fonts "Sans Serif")    '(:family "Sans Serif"))
               (nil (warn "Cannot find any of the required fonts."))))
-       (topline            `(:inherit variable-pitch :weight bold :foreground "yellow"))
+       (topline            `(:inherit variable-pitch :weight ultra-bold :foreground "yellow" :underline nil))
        (headline           `(:inherit variable-pitch :weight semi-bold :foreground "white")))
 
   (custom-theme-set-faces
@@ -256,17 +256,17 @@ Returns the list of tangled files."
    `(org-level-7 ((t (,@headline ,@variable-tuple))))
    `(org-level-6 ((t (,@headline ,@variable-tuple))))
    `(org-level-5 ((t (,@headline ,@variable-tuple))))
-   `(org-level-4 ((t (,@headline ,@variable-tuple :height 1.1))))
-   `(org-level-3 ((t (,@headline ,@variable-tuple :height 1.2))))
-   `(org-level-2 ((t (,@headline ,@variable-tuple :height 1.4))))
-   `(org-level-1 ((t (,@topline ,@variable-tuple :height 1.7))))
+   `(org-level-4 ((t (,@headline ,@variable-tuple :height 1.4))))
+   `(org-level-3 ((t (,@headline ,@variable-tuple :height 1.5 :slant italic))))
+   `(org-level-2 ((t (,@headline ,@variable-tuple :height 1.6 :slant italic))))
+   `(org-level-1 ((t (,@topline ,@variable-tuple :height 2.0))))
    `(org-document-title ((t (,@headline ,@variable-tuple :height 1.7 :underline nil))))))
 
 ;; Faces for other (non-title) elements
 (custom-theme-set-faces
    'user
-   '(org-block ((t (:inherit fixed-pitch))))
-   '(org-date ((t (:inherit (default fixed-pitch) :height 1.2 :background "#333"))))
+   '(org-block ((t (:inherit fixed-pitch :height 1.2))))
+   '(org-date ((t (:weight bold :inherit fixed-pitch :foreground "yellow" :background "#222" :underline nil))))
    '(org-code ((t (:inherit (shadow fixed-pitch)))))
    '(org-document-info ((t (:foreground "dark orange"))))
    '(org-document-info-keyword ((t (:inherit (shadow fixed-pitch)))))
@@ -275,7 +275,7 @@ Returns the list of tangled files."
    '(org-meta-line ((t (:inherit (font-lock-comment-face fixed-pitch)))))
    '(org-property-value ((t (:inherit fixed-pitch))) t)
    '(org-special-keyword ((t (:inherit (font-lock-comment-face fixed-pitch)))))
-   '(org-table ((t (:inherit fixed-pitch :foreground "#83a598"))))
+   '(org-table ((t (:inherit fixed-pitch :foreground "#a3d5c8"))))
    '(org-verbatim ((t (:inherit (shadow fixed-pitch))))))
 
 ;; From https://stackoverflow.com/questions/10969617/hiding-markup-elements-in-org-mode
