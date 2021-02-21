@@ -192,6 +192,15 @@ Packages are downloaded from various online repositories, and the following are 
 
 
 ** Helper Packages
+
+Explorer
+#+begin_src emacs-lisp
+  (use-package git-timemachine)
+  (use-package undo-tree)
+  (global-undo-tree-mode +1)
+#+end_src
+
+
 Install the package command-log-mode to enable showing our keystrokes
 
 #+BEGIN_SRC emacs-lisp
@@ -236,12 +245,20 @@ Enable syntax-checking in various modes
   (use-package treemacs-magit)
 #+END_SRC
 
-#+RESULTS:
-: t
-
 Hydra. /Sirf naam hi kaafi hai/.
 #+begin_src emacs-lisp
   (use-package hydra)
+#+end_src
+
+Key-chords
+#+begin_src emacs-lisp
+  (use-package key-chord)
+
+  (key-chord-define-global "jj" 'avy-goto-char-timer)
+  (key-chord-define-global "jl" 'avy-goto-line)
+  (key-chord-define-global "uu" 'undo-tree-visualize)
+
+  (key-chord-mode +1)
 #+end_src
 
 
@@ -380,6 +397,13 @@ We will install rainbow-delimiters and enable it for our LISPs.
 
 
 * Python
+
+To use LSP, you need to have /python-language-server/  installed
+#+begin_src bash
+  pip install python-language-server
+#+end_src
+
+
 #+begin_src emacs-lisp
   (use-package python-mode)
   (use-package python-pytest)
@@ -391,6 +415,19 @@ We will install rainbow-delimiters and enable it for our LISPs.
     :hook (python-mode . (lambda ()
                            (require 'lsp-python-ms)
                            (lsp))))
+
+  (defun my/python-shell-send-selection (&optional args)
+    (interactive "p")
+    (if (region-active-p)
+        (python-shell-send-region (region-beginning) (region-end))
+      (python-shell-send-statement)))
+
+
+  (eval-after-load 'python-mode
+    '(progn
+       (define-key python-mode-map (kbd "C-c C-c") #'python-shell-send-defun)
+       (define-key python-mode-map (kbd "C-c C-s") #'my/python-shell-send-selection)
+       (define-key python-mode-map (kbd "C-c C-b") #'python-shell-send-buffer)))
 #+end_src
 
 
@@ -425,12 +462,6 @@ We will install rainbow-delimiters and enable it for our LISPs.
 
 * Projects, Workspaces
 
-** Explorer
-#+begin_src emacs-lisp
-  (use-package git-timemachine)
-#+end_src
-
-
 ** Projects                                                      :shortcuts:
 #+begin_src emacs-lisp
   (use-package projectile
@@ -456,7 +487,7 @@ We will install rainbow-delimiters and enable it for our LISPs.
 
 
 * Shortcuts                                                       :shortcuts:
-** Undo Defaults
+** Unset Defaults
 #+begin_src emacs-lisp
   ;; We don't need no suspends. Or Undo-s.
   (global-unset-key (kbd "C-z"))
