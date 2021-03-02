@@ -408,7 +408,7 @@ To use LSP, you need to have /python-language-server/  installed
   (use-package python-mode)
   (use-package python-pytest)
   (use-package pyvenv)
-
+  (pyvenv-mode t)
   (use-package lsp-python-ms
     :ensure t
     :init (setq lsp-python-ms-executable (executable-find "python-language-server"))
