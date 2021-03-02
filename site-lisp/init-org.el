@@ -251,16 +251,16 @@ Returns the list of tangled files."
 
   (custom-theme-set-faces
    'user
-   `(org-tag ((t (,@headline ,@variable-tuple :height 0.6 :foreground "yellow" :background "#333" :box t :width semi-condensed))))
+   `(org-tag ((t (,@headline ,@variable-tuple :height 0.5 :foreground "yellow" :background "#333" :box t :width semi-condensed))))
    `(org-level-8 ((t (,@headline ,@variable-tuple))))
    `(org-level-7 ((t (,@headline ,@variable-tuple))))
    `(org-level-6 ((t (,@headline ,@variable-tuple))))
    `(org-level-5 ((t (,@headline ,@variable-tuple))))
-   `(org-level-4 ((t (,@headline ,@variable-tuple :height 1.4))))
-   `(org-level-3 ((t (,@headline ,@variable-tuple :height 1.5 :slant italic))))
-   `(org-level-2 ((t (,@headline ,@variable-tuple :height 1.6 :slant italic))))
-   `(org-level-1 ((t (,@topline ,@variable-tuple :height 2.0))))
-   `(org-document-title ((t (,@headline ,@variable-tuple :height 1.7 :underline nil))))))
+   `(org-level-4 ((t (,@headline ,@variable-tuple :height 1.3))))
+   `(org-level-3 ((t (,@headline ,@variable-tuple :height 1.4 :slant italic))))
+   `(org-level-2 ((t (,@headline ,@variable-tuple :height 1.5))))
+   `(org-level-1 ((t (,@topline ,@variable-tuple :height 1.8))))
+   `(org-document-title ((t (,@headline ,@variable-tuple :height 1.6 :underline nil))))))
 
 ;; Faces for other (non-title) elements
 (custom-theme-set-faces
