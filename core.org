@@ -393,6 +393,7 @@ We will install rainbow-delimiters and enable it for our LISPs.
   ;; Let's also syntax some groovy, kotlin and scala
   (use-package groovy-mode)
   (use-package kotlin-mode)
+  (use-package scala-mode)
 #+END_SRC
 
 
@@ -428,6 +429,13 @@ To use LSP, you need to have /python-language-server/  installed
        (define-key python-mode-map (kbd "C-c C-c") #'python-shell-send-defun)
        (define-key python-mode-map (kbd "C-c C-s") #'my/python-shell-send-selection)
        (define-key python-mode-map (kbd "C-c C-b") #'python-shell-send-buffer)))
+#+end_src
+
+
+* JS, JSON
+#+begin_src  emacs-elisp
+(use-package json-mode)
+  
 #+end_src
 
 
@@ -505,6 +513,7 @@ Some better replacements
   (global-set-key (kbd "C-c d") 'dash-at-point)
   (global-set-key (kbd "C-c C-r") 'ivy-resume)
   (global-set-key (kbd "C-x t") 'ut/today)
+  (global-set-key (kbd "C-c a") 'org-agenda)
   (add-hook 'after-init-hook 'global-company-mode)
 #+END_SRC
 
