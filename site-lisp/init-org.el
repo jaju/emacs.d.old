@@ -61,7 +61,8 @@
    (sql . t)
    (plantuml . t)
    (http . t)
-   (restclient . t)))
+   (restclient . t)
+   (rust . t)))
 (setq org-confirm-babel-evaluate nil)
 
 ;; More from http://fgiasson.com/blog/index.php/2016/04/05/using-clojure-in-org-mode-and-implementing-asynchronous-processing/

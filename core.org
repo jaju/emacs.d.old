@@ -439,6 +439,16 @@ To use LSP, you need to have /python-language-server/  installed
 #+end_src
 
 
+* Rust
+** TODO Look at [[https://robert.kra.hn/posts/2021-02-07_rust-with-emacs/][this post]] for ideas.
+** Config
+#+begin_src emacs-lisp
+  (use-package rust-mode)
+  (use-package ob-rust)
+  (add-hook #'rust-mode-hook #'lsp)
+#+end_src
+
+
 * Org Mode
 ** Useful links
 - Face attributes - [[https://www.gnu.org/software/emacs/manual/html_node/elisp/Face-Attributes.html][link]]
