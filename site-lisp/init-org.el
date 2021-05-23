@@ -15,7 +15,7 @@
       org-startup-indented t
       org-src-fontify-natively t
       org-default-notes-file "~/.org/on-the-fly-notes.org"
-      org-fontify-whole-heading-line t
+      org-fontify-whole-heading-line nil
       org-return-follows-link t
       org-hide-emphasis-markers nil)
 
@@ -193,7 +193,7 @@ Returns the list of tangled files."
           (directory-files-recursive (file-name-directory (buffer-file-name)) "\\.org$" 20)))
 
 ;; PlantUML
-(setq org-plantuml-jar-path (expand-file-name "/usr/local/Cellar/plantuml/1.2021.1/libexec/plantuml.jar"))
+(setq org-plantuml-jar-path (expand-file-name "/usr/local/Cellar/plantuml/1.2021.6/libexec/plantuml.jar"))
 (add-to-list 'org-src-lang-modes '("plantuml" . plantuml))
 ;(org-babel-do-load-languages 'org-babel-load-languages '((plantuml . t)))
 
@@ -252,15 +252,15 @@ Returns the list of tangled files."
 
   (custom-theme-set-faces
    'user
-   `(org-tag ((t (,@headline ,@variable-tuple :height 0.5 :foreground "yellow" :background "#333" :box t :width semi-condensed))))
+  ;; `(org-tag ((t (,@topline ,@variable-tuple :foreground "yellow" :background "#333" :underline t))))
    `(org-level-8 ((t (,@headline ,@variable-tuple))))
    `(org-level-7 ((t (,@headline ,@variable-tuple))))
    `(org-level-6 ((t (,@headline ,@variable-tuple))))
    `(org-level-5 ((t (,@headline ,@variable-tuple))))
-   `(org-level-4 ((t (,@headline ,@variable-tuple :height 1.3))))
-   `(org-level-3 ((t (,@headline ,@variable-tuple :height 1.4 :slant italic))))
-   `(org-level-2 ((t (,@headline ,@variable-tuple :height 1.5))))
-   `(org-level-1 ((t (,@topline ,@variable-tuple :height 1.8))))
+   `(org-level-4 ((t (,@headline ,@variable-tuple :height 1.1))))
+   `(org-level-3 ((t (,@headline ,@variable-tuple :height 1.2 :slant italic))))
+   `(org-level-2 ((t (,@headline ,@variable-tuple :height 1.3))))
+   `(org-level-1 ((t (,@topline ,@variable-tuple :height 1.4))))
    `(org-document-title ((t (,@headline ,@variable-tuple :height 1.6 :underline nil))))))
 
 ;; Faces for other (non-title) elements
