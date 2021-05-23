@@ -7,7 +7,7 @@ The file [[file:core.el][core.el]] is generated from the org file [[file:core.or
 Note: *YMMV*
 
 1. Clone the repository
- #+begin_src  bash
+ #+begin_src bash
    git clone https://github.com/jaju/emacs.d.git ~/.emacs.d
 #+end_src
 
