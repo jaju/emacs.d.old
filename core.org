@@ -5,19 +5,18 @@
 ** Refcard
 The emacs refcard can be found online [[https://www.gnu.org/software/emacs/refcards/pdf/refcard.pdf][here]].
 
-
 ** Notes
 - Configuration tested on a MacOS (currently, Big Sur) with locally-compiled emacs. Compiled with the following options.
 
 #+BEGIN_SRC bash
-  ACLOCAL_PATH='/usr/local/share/aclocal' ./configure --prefix=/usr/local/emacs/HEAD --with-gnutls --with-rsvg --without-dbus --enable-locallisppath=/usr/local/share/emacs/site-lisp --infodir=/usr/local/emacs/HEAD/share/info/emacs --with-ns --disable-ns-self-contained --with-imagemagick --without-xpm --without-tiff --with-jpeg --with-gif --with-png --with-xft --without-makeinfo --with-mailutils --with-json
+  ACLOCAL_PATH='/usr/local/share/aclocal' ./configure --prefix=/usr/local/emacs/HEAD --with-gnutls --with-rsvg --without-dbus --enable-locallisppath=/usr/local/share/emacs/site-lisp --infodir=/usr/local/emacs/HEAD/share/info/emacs --with-ns --disable-ns-self-contained --with-imagemagick --without-xpm --without-tiff --with-jpeg --with-gif --with-png --with-xft --with-mailutils --with-json --with-x --with-native-compilation
 #+END_SRC
 
-- Homebrew has libgccjit but the native-compilation feature has not yet landed in the emacs-master.
+- Homebrew has libgccjit, which can be leveraged for enabling native compilation
 
 - This is not an original piece of work - but stitched together from multiple cool examples I've found over time. Doom-emacs remains a key source of influence.
-
   
+
 * Opening Setup
 ** Step 0 - The Warning
 #+BEGIN_SRC emacs-lisp
@@ -51,7 +50,7 @@ We turn off some default behaviours we are not interested in (and vice versa, tu
   (defalias 'yes-or-no-p 'y-or-n-p)
 
   ;; The margins
-  (set-fringe-mode 10)
+  (set-fringe-mode 5)
 
   ;; Delete when beginning to type when text selected.
   (delete-selection-mode t)
@@ -77,9 +76,7 @@ We turn off some default behaviours we are not interested in (and vice versa, tu
     (global-set-key (kbd "s-<mouse-1>") 'browse-url)
     ;; Turn off the following modes
     (dolist (mode '(tooltip-mode tool-bar-mode scroll-bar-mode))
-      (when (fboundp mode) (funcall mode -1)))
-    )
-
+      (when (fboundp mode) (funcall mode -1))))
 
   ;; Good to see you, line- and column-numbers
   (global-display-line-numbers-mode t)
@@ -89,6 +86,7 @@ We turn off some default behaviours we are not interested in (and vice versa, tu
 
 ** Let us keep reminding ourselves
 Of the new, or upcoming, shiny things. When they are available, enable the right compile/config options too.
+Update: Both are now available - but we can keep reminding ourselves of the awesomeness.
 #+BEGIN_SRC emacs-lisp
   ;; https://www.masteringemacs.org/article/speed-up-emacs-libjansson-native-elisp-compilation
   (if (and (fboundp 'native-comp-available-p)
@@ -142,7 +140,8 @@ To describe
 
      (add-to-list 'load-path (concat *emacsd-dir* "site-lisp"))
      (load-env-file (concat *emacsd-dir* "env"))
-     (getenv "PATH")
+     ;;(getenv "PATH")
+
    #+END_SRC
 
 
@@ -296,10 +295,10 @@ Github - [[https://github.com/emacs-dashboard/emacs-dashboard][https://github.co
 
 #+BEGIN_SRC emacs-lisp
   (set-face-attribute 'default nil :font "Fira Code" :height 180)
-  ;; (load-theme 'modus-vivendi)
+  (load-theme 'modus-vivendi)
   ;; (load-theme 'wombat)
   ;; (load-theme 'tsdh-dark)
-  (load-theme 'sanityinc-tomorrow-bright)
+  ;; (load-theme 'sanityinc-tomorrow-bright)
 #+END_SRC
 
 
@@ -355,7 +354,7 @@ We'll go with ivy
     :commands lsp-ui-mode
     :after lsp-mode)
   (use-package company)
-  (use-package company-lsp)
+  ;;(use-package company-lsp)
   (use-package lsp-ivy
     :commands lsp-ivy-workspace-symbol
     :after (ivy lsp-mode))
@@ -435,7 +434,6 @@ To use LSP, you need to have /python-language-server/  installed
 * JS, JSON
 #+begin_src  emacs-elisp
 (use-package json-mode)
-  
 #+end_src
 
 
@@ -594,7 +592,6 @@ Move across windows, structural navigation, window resizing
                     ("c" org-roam-capture "capture")
                     ("j" org-roam-jump-to-index "jump to index")))
 #+end_src
-
 
 * Other Experimental Stuff
 #+begin_src emacs-lisp
