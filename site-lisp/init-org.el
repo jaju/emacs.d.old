@@ -17,7 +17,8 @@
       org-default-notes-file "~/.org/on-the-fly-notes.org"
       org-fontify-whole-heading-line nil
       org-return-follows-link t
-      org-hide-emphasis-markers nil)
+      org-hide-emphasis-markers nil
+      org-image-actual-width nil)
 
 (setq org-todo-keywords
       '((sequence "TODO" "WAITING" "|" "DONE" "DELEGATED")  ;; Tasks
@@ -27,19 +28,27 @@
 
 ;; Org-babel
 
+(setq org-src-preserve-indentation t)
+(require 'color)
+(set-face-attribute 'org-block nil :background
+                    (color-darken-name
+                     (face-attribute 'default :background) 3))
+
 ;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Clojure
 ;;;;;;;;;;;;;;;;;;;;;;;;
 (require 'ob-clojure)
 (require 'cider)
 (setq org-babel-clojure-backend 'cider)
-
+(add-to-list 'org-src-lang-modes '("clojure" . clojure))
 ;;;;;;;;;;;;;;;;;;;;;;;
 ;; HTTP interactions
 ;;;;;;;;;;;;;;;;;;;;;;;
 (use-package ob-http)
 (use-package restclient)
 (use-package ob-restclient)
+
+;; Diagrams
 (use-package plantuml-mode)
 
 ;;;;;;;;;;;;;;;;;;;;
@@ -66,8 +75,8 @@
 (setq org-confirm-babel-evaluate nil)
 
 ;; More from http://fgiasson.com/blog/index.php/2016/04/05/using-clojure-in-org-mode-and-implementing-asynchronous-processing/
-;; (org-defkey org-mode-map "\C-x\C-e" 'cider-eval-last-sexp)
-;; (org-defkey org-mode-map "\C-c\C-d" 'cider-doc)
+(org-defkey org-mode-map "\C-x\C-e" 'cider-eval-last-sexp)
+(org-defkey org-mode-map "\C-c\C-d" 'cider-doc)
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -97,8 +106,9 @@
       '((animate . "{src: '%splugin/animate/animate.js', async: true, condition: function() { return !!document.body.classList; }}")
 	(anything . "{src: '%splugin/animate/anything.js', async: true, condition: function() { return true; }}")))
 
+
 (define-skeleton org-post-skeleton
-  "Inserts the right directives for hugo-orgmode blogging"
+  "Inserts the right directives for hugo-orgmode blogging."
   "Title: "
   "** " str "\n"
   ":PROPERTIES:\n"
@@ -108,18 +118,23 @@
   ":EXPORT_HUGO_CUSTOM_FRONT_MATTER: :key value\n"
   ":END:\n")
 
+;; From https://lucidmanager.org/productivity/create-websites-with-org-mode-and-hugo/
+(setq time-stamp-active t
+        time-stamp-start "#\\+LASTMOD:[ \t]*"
+        time-stamp-end "$"
+        time-stamp-format "%Y-%02m-%02dT%02H:%02M:%02S%5z")
+(add-hook 'before-save-hook 'time-stamp nil)
 
 (define-skeleton org-note-skeleton
-  "Inserts the right directives for notes"
+  "Inserts the right directives for notes."
   "Title: "
-  "#+HUGO_BASE_DIR: ~/Projects/hugo-blog\n"
-  "#+HUGO_SECTION: notes\n"
   "#+TITLE: " str "\n"
   "#+SUMMARY: \n"
   "#+DATE: " (ut/now) "\n"
   "#+LASTMOD: " (ut/now) "\n"
   "#+TAGS[]: \n"
-  "#+PUBLISHED: false\n"
+  "#+CATEGORIES[]: \n"
+  "#+DRAFT: true\n"
   "#+PROPERTY: header-args:clojure :exports source :results output :comments link :session *clojure-nrepl*\n"
   "#+PROPERTY: header-args:python :exports source :results output :comments link :session *python-dl*\n"
   "#+PROPERTY: header-args:bash :exports source :results output :comments link :session *shell*\n")
@@ -193,7 +208,7 @@ Returns the list of tangled files."
           (directory-files-recursive (file-name-directory (buffer-file-name)) "\\.org$" 20)))
 
 ;; PlantUML
-(setq org-plantuml-jar-path (expand-file-name "/usr/local/Cellar/plantuml/1.2021.6/libexec/plantuml.jar"))
+(setq org-plantuml-jar-path (expand-file-name "/usr/local/Cellar/plantuml/1.2021.9/libexec/plantuml.jar"))
 (add-to-list 'org-src-lang-modes '("plantuml" . plantuml))
 ;(org-babel-do-load-languages 'org-babel-load-languages '((plantuml . t)))
 
@@ -230,7 +245,7 @@ Returns the list of tangled files."
   :config
   (add-hook 'org-mode-hook (lambda () (org-bullets-mode 1))))
 
-(add-hook 'org-mode-hook 'variable-pitch-mode)
+;;(add-hook 'org-mode-hook 'variable-pitch-mode)
 
 (font-lock-add-keywords 'org-mode
 			'(("^\\*+ "
@@ -247,8 +262,8 @@ Returns the list of tangled files."
               ((x-list-fonts "Verdana")         '(:font "Verdana"))
               ((x-family-fonts "Sans Serif")    '(:family "Sans Serif"))
               (nil (warn "Cannot find any of the required fonts."))))
-       (topline            `(:inherit variable-pitch :weight ultra-bold :foreground "yellow" :underline nil))
-       (headline           `(:inherit variable-pitch :weight semi-bold :foreground "white")))
+       (topline            `(:inherit fixed-pitch :weight ultra-bold :foreground "yellow" :underline nil))
+       (headline           `(:inherit fixed-pitch :weight semi-bold :foreground "white")))
 
   (custom-theme-set-faces
    'user
@@ -258,10 +273,10 @@ Returns the list of tangled files."
    `(org-level-6 ((t (,@headline ,@variable-tuple))))
    `(org-level-5 ((t (,@headline ,@variable-tuple))))
    `(org-level-4 ((t (,@headline ,@variable-tuple :height 1.1))))
-   `(org-level-3 ((t (,@headline ,@variable-tuple :height 1.2 :slant italic))))
+   `(org-level-3 ((t (,@headline ,@variable-tuple :height 1.2))))
    `(org-level-2 ((t (,@headline ,@variable-tuple :height 1.3))))
    `(org-level-1 ((t (,@topline ,@variable-tuple :height 1.4))))
-   `(org-document-title ((t (,@headline ,@variable-tuple :height 1.6 :underline nil))))))
+   `(org-document-title ((t (,@headline ,@variable-tuple :height 1.1 :underline nil))))))
 
 ;; Faces for other (non-title) elements
 (custom-theme-set-faces
