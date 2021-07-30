@@ -506,18 +506,52 @@ To use LSP, you need to have /python-language-server/  installed
 #+END_SRC
 
 
-* Paredit
+* Paredit, Parinfer
 #+begin_src emacs-lisp
-  (use-package paredit)
+(use-package paredit)
 
-  (autoload 'enable-paredit-mode "paredit" "Pseudo-structural editing for Lispy text" t)
+(autoload 'enable-paredit-mode "paredit" "Pseudo-structural editing for Lispy text" t)
 
-  (dolist (hook '(emacs-lisp-mode-hook
-                  eval-expression-minibuffer-setup-hook
-                  clojure-mode-hook
-                  clojurescript-mode-hook
-                  cider-repl-mode-hook))
-    (add-hook hook #'enable-paredit-mode))
+(dolist (hook '(emacs-lisp-mode-hook
+                eval-expression-minibuffer-setup-hook
+                clojure-mode-hook
+                clojurescript-mode-hook
+                cider-repl-mode-hook))
+  (add-hook hook #'enable-paredit-mode))
+
+;;; Parinfer - for Clojure and other LISPs
+;;; Picked from https://github.com/DogLooksGood/parinfer-mode
+;; (use-package parinfer
+;;   :ensure t
+;;   :bind
+;;   (("C-," . painfer-toggle-mode))
+;;   :init
+;;   (progn
+;;     (setq parinfer-extensions
+;;           '(defaults
+;;              pretty-parens
+;;              ;; evil
+;;              lispy
+;;              paredit
+;;              smart-tab
+;;              smart-yank))
+;;     (add-hook 'clojure-mode-hook #'parinfer-mode)
+;;     (add-hook 'emacs-lisp-mode-hook #'parinfer-mode)
+;;     (add-hook 'common-lisp-mode #'parinfer-mode)
+;;     (add-hook 'scheme-mode-hook #'parinfer-mode)
+;;     (add-hook 'lisp-mode-hook #'parinfer-mode)))
+#+end_src
+
+** Smartparens
+#+begin_src emacs-lisp
+(use-package smartparens)
+(dolist (hook '(emacs-lisp-mode-hook
+                eval-expression-minibuffer-setup-hook
+                clojure-mode-hook
+                clojurescript-mode-hook
+                cider-repl-mode-hook))
+  (add-hook hook #'smartparens-mode))
+
 #+end_src
 
 
@@ -525,34 +559,34 @@ To use LSP, you need to have /python-language-server/  installed
 
 ** Projects                                                      :shortcuts:
 #+begin_src emacs-lisp
-  (use-package projectile
-    :ensure t
-    :init
-    (projectile-mode +1)
-    :bind
-    (:map projectile-mode-map
-          ("s-p" . projectile-command-map)))
+(use-package projectile
+  :ensure t
+  :init
+  (projectile-mode +1)
+  :bind
+  (:map projectile-mode-map
+        ("s-p" . projectile-command-map)))
 
 #+end_src
 
 
 ** Tabs
 #+begin_src emacs-lisp
-  (use-package centaur-tabs
-    :demand
-    :config
-    (centaur-tabs-mode 1))
+(use-package centaur-tabs
+  :demand
+  :config
+  (centaur-tabs-mode 1))
 
-  (setq centaur-tabs-style "bar")
+(setq centaur-tabs-style "bar")
 #+end_src
 
 
 * Shortcuts                                                       :shortcuts:
 ** Unset Defaults
 #+begin_src emacs-lisp
-  ;; We don't need no suspends. Or Undo-s.
-  (global-unset-key (kbd "C-z"))
-  (global-unset-key (kbd "s-z"))
+;; We don't need no suspends. Or Undo-s.
+(global-unset-key (kbd "C-z"))
+(global-unset-key (kbd "s-z"))
 #+end_src
 
 
@@ -561,42 +595,42 @@ To use LSP, you need to have /python-language-server/  installed
 Some better replacements
 
 #+BEGIN_SRC emacs-lisp
-  (global-set-key (kbd "C-s") 'swiper)
-  (global-set-key (kbd "M-x") 'counsel-M-x)
-  (global-set-key (kbd "C-c d") 'dash-at-point)
-  (global-set-key (kbd "C-c C-r") 'ivy-resume)
-  (global-set-key (kbd "C-x t") 'ut/today)
-  (global-set-key (kbd "C-c a") 'org-agenda)
-  (add-hook 'after-init-hook 'global-company-mode)
+(global-set-key (kbd "C-s") 'swiper)
+(global-set-key (kbd "M-x") 'counsel-M-x)
+(global-set-key (kbd "C-c d") 'dash-at-point)
+(global-set-key (kbd "C-c C-r") 'ivy-resume)
+(global-set-key (kbd "C-x t") 'ut/today)
+(global-set-key (kbd "C-c a") 'org-agenda)
+(add-hook 'after-init-hook 'global-company-mode)
 #+END_SRC
 
 
 ** Quick actions - s-2
 Unicode, text-size actions...
 #+begin_src emacs-lisp
-  (global-set-key (kbd "s-2")
-                  (defhydra s-2-actions (:color amaranth)
-                    "Super-2 actions"
-                    ("u" counsel-unicode-char "Unicode characters" :color red)
-                    ("+" text-scale-increase "Zoom in")
-                    ("=" text-scale-increase "Zoom in")
-                    ("-" text-scale-decrease "Zoom out")
-                    ("q" nil "quit" :color blue)))
+(global-set-key (kbd "s-2")
+                (defhydra s-2-actions (:color amaranth)
+                  "Super-2 actions"
+                  ("u" counsel-unicode-char "Unicode characters" :color red)
+                  ("+" text-scale-increase "Zoom in")
+                  ("=" text-scale-increase "Zoom in")
+                  ("-" text-scale-decrease "Zoom out")
+                  ("q" nil "quit" :color blue)))
 
-  (global-set-key (kbd "s-n") #'make-frame)
+(global-set-key (kbd "s-n") #'make-frame)
 #+end_src
 
 
 ** Editing
 The Ctrl-w in shells is pretty useful, and we can haz it in emacs!
 #+BEGIN_SRC emacs-lisp
-  (defun backward-kill-word-or-kill-region (&optional arg)
-    (interactive "p")
-    (if (region-active-p)
-        (kill-region (region-beginning) (region-end))
-      (backward-kill-word arg)))
+(defun backward-kill-word-or-kill-region (&optional arg)
+  (interactive "p")
+  (if (region-active-p)
+      (kill-region (region-beginning) (region-end))
+    (backward-kill-word arg)))
 
-  (global-set-key (kbd "C-w") 'backward-kill-word-or-kill-region)
+(global-set-key (kbd "C-w") 'backward-kill-word-or-kill-region)
 #+END_SRC
 
 
@@ -605,37 +639,37 @@ The Ctrl-w in shells is pretty useful, and we can haz it in emacs!
 *** M-s - Quick motion actions
 Move across windows, structural navigation, window resizing
 #+begin_src emacs-lisp
-  (global-set-key (kbd "M-s-<left>") 'windmove-left)
-  (global-set-key (kbd "M-s-<right>") 'windmove-right)
-  (global-set-key (kbd "M-s-<up>") 'windmove-up)
-  (global-set-key (kbd "M-s-<down>") 'windmove-down)
-  (global-set-key (kbd "M-s-o") 'counsel-imenu)
-  (when (fboundp 'toggle-frame-maximized)
-    (global-set-key (kbd "M-s-m") 'toggle-frame-maximized))
+(global-set-key (kbd "M-s-<left>") 'windmove-left)
+(global-set-key (kbd "M-s-<right>") 'windmove-right)
+(global-set-key (kbd "M-s-<up>") 'windmove-up)
+(global-set-key (kbd "M-s-<down>") 'windmove-down)
+(global-set-key (kbd "M-s-o") 'counsel-imenu)
+(when (fboundp 'toggle-frame-maximized)
+  (global-set-key (kbd "M-s-m") 'toggle-frame-maximized))
 
 #+end_src
 
 
 *** Window actions - s-w
 #+begin_src emacs-lisp
-  (global-set-key (kbd "s-w")
-                  (defhydra window-actions ()
-                    "Window actions"
-                    ("c" ace-window "switch to window")
-                    ("t" treemacs "toggle treemacs")
-                    ("w" treemacs-switch-workspace "switch workspace")
-                    ("e" treemacs-edit-workspaces "edit workspaces")))
+(global-set-key (kbd "s-w")
+                (defhydra window-actions ()
+                  "Window actions"
+                  ("c" ace-window "switch to window")
+                  ("t" treemacs "toggle treemacs")
+                  ("w" treemacs-switch-workspace "switch workspace")
+                  ("e" treemacs-edit-workspaces "edit workspaces")))
 #+end_src
 
 
 ** Roam
 #+begin_src emacs-lisp
-  (global-set-key (kbd "s-r")
-                  (defhydra org-roam-actions (:color blue)
-                    "Org roam actiions"
-                    ("i" org-roam-insert "insert")
-                    ("c" org-roam-capture "capture")
-                    ("j" org-roam-jump-to-index "jump to index")))
+(global-set-key (kbd "s-r")
+                (defhydra org-roam-actions (:color blue)
+                  "Org roam actiions"
+                  ("i" org-roam-insert "insert")
+                  ("c" org-roam-capture "capture")
+                  ("j" org-roam-jump-to-index "jump to index")))
 #+end_src
 
 
