@@ -18,7 +18,8 @@
       org-fontify-whole-heading-line nil
       org-return-follows-link t
       org-hide-emphasis-markers nil
-      org-image-actual-width nil)
+      org-image-actual-width nil
+      org-src-preserve-indentation t)
 
 (setq org-todo-keywords
       '((sequence "TODO" "WAITING" "|" "DONE" "DELEGATED")  ;; Tasks
@@ -28,7 +29,6 @@
 
 ;; Org-babel
 
-(setq org-src-preserve-indentation t)
 (require 'color)
 (set-face-attribute 'org-block nil :background
                     (color-darken-name
@@ -225,14 +225,13 @@ Returns the list of tangled files."
 	("j" "Journal" entry (file+datetree "~/.org/journal.org")
 	 "* %?\nEntered on %U\n  %i\n  %a")))
 
+;; org-roam
 (use-package org-roam)
-
 (setq org-roam-directory "~/.org/roam/")
 (if (not (file-directory-p org-roam-directory))
     (make-directory org-roam-directory))
 (setq org-roam-db-location "~/.org/roam/org-roam.db")
 (setq org-roam-index-file "~/.org/roam/index.org")
-
 (add-hook 'after-init-hook 'org-roam-mode)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -241,9 +240,7 @@ Returns the list of tangled files."
 ;; Fonts, styles, sizes for the headlines, tags
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(use-package org-bullets
-  :config
-  (add-hook 'org-mode-hook (lambda () (org-bullets-mode 1))))
+(use-package org-bullets)
 
 ;;(add-hook 'org-mode-hook 'variable-pitch-mode)
 
@@ -305,6 +302,7 @@ Returns the list of tangled files."
 
 (add-hook 'org-mode-hook
 	  (lambda ()
+	    (org-bullets-mode 1)
 	    (subword-mode 1)
 	    (turn-on-visual-line-mode)))
 
