@@ -30,30 +30,8 @@
      ;;(add-hook 'clojurescript-mode-hook #'lsp)
      (add-hook 'clojure-mode-hook #'clj/pretty-fns)
      (add-hook 'cider-repl-mode-hook
-               '(lambda () (define-key cider-repl-mode-map (kbd "C-c M-b")
-			     'cider-repl-clear-buffer)))))
-
-;;; Parinfer - for Clojure and other LISPs
-;;; Picked from https://github.com/DogLooksGood/parinfer-mode
-;; (use-package parinfer
-;;   :ensure t
-;;   :bind
-;;   (("C-," . painfer-toggle-mode))
-;;   :init
-;;   (progn
-;;     (setq parinfer-extensions
-;;           '(defaults
-;;              pretty-parens
-;;              ;; evil
-;;              lispy
-;;              paredit
-;;              smart-tab
-;;              smart-yank))
-;;     (add-hook 'clojure-mode-hook #'parinfer-mode)
-;;     (add-hook 'emacs-lisp-mode-hook #'parinfer-mode)
-;;     (add-hook 'common-lisp-mode #'parinfer-mode)
-;;     (add-hook 'scheme-mode-hook #'parinfer-mode)
-;;     (add-hook 'lisp-mode-hook #'parinfer-mode)))
+               (lambda () (define-key cider-repl-mode-map (kbd "C-c M-b")
+			    'cider-repl-clear-buffer)))))
 
 (defun clj/bb-repl ()
   (interactive)
