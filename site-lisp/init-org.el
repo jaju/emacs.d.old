@@ -226,6 +226,7 @@ Returns the list of tangled files."
 	 "* %?\nEntered on %U\n  %i\n  %a")))
 
 ;; org-roam
+(setq org-roam-v2-ack t)
 (use-package org-roam)
 (setq org-roam-directory "~/.org/roam/")
 (if (not (file-directory-p org-roam-directory))
@@ -273,13 +274,13 @@ Returns the list of tangled files."
    `(org-level-3 ((t (,@headline ,@variable-tuple :height 1.2))))
    `(org-level-2 ((t (,@headline ,@variable-tuple :height 1.3))))
    `(org-level-1 ((t (,@topline ,@variable-tuple :height 1.4))))
-   `(org-document-title ((t (,@headline ,@variable-tuple :height 1.1 :underline nil))))))
+   `(org-document-title ((t (,@headline ,@variable-tuple :underline nil))))))
 
 ;; Faces for other (non-title) elements
 (custom-theme-set-faces
    'user
    '(org-block ((t (:inherit fixed-pitch :height 1.2))))
-   '(org-date ((t (:weight bold :inherit fixed-pitch :foreground "yellow" :background "#222" :underline nil))))
+   '(org-date ((t (:inherit fixed-pitch :weight bold :foreground "yellow" :background "#222" :underline nil))))
    '(org-code ((t (:inherit (shadow fixed-pitch)))))
    '(org-document-info ((t (:foreground "dark orange"))))
    '(org-document-info-keyword ((t (:inherit (shadow fixed-pitch)))))
