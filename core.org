@@ -28,59 +28,60 @@ The emacs refcard can be found online [[https://www.gnu.org/software/emacs/refca
 ** Initial settings
 We turn off some default behaviours we are not interested in (and vice versa, turn on some)
 #+BEGIN_SRC emacs-lisp
-  (setq inhibit-startup-message t
-        visible-bell t
-        visual-line-mode t
-        tab-width 2
-        indent-tabs-mode nil
-        tab-always-indent 'complete
-        gc-cons-threshold 10000000
-        read-process-output-max (* 1024 1024)
-        lexical-binding t
-        initial-scratch-message nil
-        sentence-end-double-space nil
-        case-fold-search nil)
-        #+END_SRC
+(setq inhibit-startup-message t
+      visible-bell t
+      visual-line-mode t
+      tab-width 2
+      indent-tabs-mode nil
+      tab-always-indent 'complete
+      tab-first-completion 'word-or-paren-or-punct
+      gc-cons-threshold 10000000
+      read-process-output-max (* 1024 1024)
+      lexical-binding t
+      initial-scratch-message nil
+      sentence-end-double-space nil
+      case-fold-search nil)
+#+END_SRC
 
         
 ** Tweaking Core Settings
 
 #+begin_src emacs-lisp
-  ;; Save some typing
-  (defalias 'yes-or-no-p 'y-or-n-p)
+;; Save some typing
+(defalias 'yes-or-no-p 'y-or-n-p)
 
-  ;; The margins
-  (set-fringe-mode 5)
+;; The margins
+(set-fringe-mode 5)
 
-  ;; Delete when beginning to type when text selected.
-  (delete-selection-mode t)
+;; Delete when beginning to type when text selected.
+(delete-selection-mode t)
 
-  ;; Highlight matching parens
-  (show-paren-mode)
+;; Highlight matching parens
+(show-paren-mode)
 
-  ;; Mac-specific settings
-  ;; (when (eq system-type 'darwin)
-  ;; (setq mac-command-modifier 'meta))
+;; Mac-specific settings
+;; (when (eq system-type 'darwin)
+;; (setq mac-command-modifier 'meta))
 
-  ;; The use of display-graphic-p is frivolous, but only here for the record that
-  ;; emacs has all kinds of functions. So, it serves as a record; a reminder.
-  (when (display-graphic-p)
+;; The use of display-graphic-p is frivolous, but only here for the record that
+;; emacs has all kinds of functions. So, it serves as a record; a reminder.
+(when (display-graphic-p)
 
-    ;; Set the on-startup frame size
-    (setq initial-frame-alist
-          '((top . 10)
-            (left . 10)
-            (width . 150)
-            (height . 54)))
-    ;; Handle URLs anywhere with the super-mouseclick combo
-    (global-set-key (kbd "s-<mouse-1>") 'browse-url)
-    ;; Turn off the following modes
-    (dolist (mode '(tooltip-mode tool-bar-mode scroll-bar-mode))
-      (when (fboundp mode) (funcall mode -1))))
+  ;; Set the on-startup frame size
+  (setq initial-frame-alist
+        '((top . 10)
+          (left . 10)
+          (width . 150)
+          (height . 54)))
+  ;; Handle URLs anywhere with the super-mouseclick combo
+  (global-set-key (kbd "s-<mouse-1>") 'browse-url)
+  ;; Turn off the following modes
+  (dolist (mode '(tooltip-mode tool-bar-mode scroll-bar-mode))
+    (when (fboundp mode) (funcall mode -1))))
 
-  ;; Good to see you, line- and column-numbers
-  (global-display-line-numbers-mode t)
-  (column-number-mode t)
+;; Good to see you, line- and column-numbers
+(global-display-line-numbers-mode t)
+(column-number-mode t)
 #+END_SRC
 
 
@@ -88,16 +89,16 @@ We turn off some default behaviours we are not interested in (and vice versa, tu
 Of the new, or upcoming, shiny things. When they are available, enable the right compile/config options too.
 Update: Both are now available - but we can keep reminding ourselves of the awesomeness.
 #+BEGIN_SRC emacs-lisp
-  ;; https://www.masteringemacs.org/article/speed-up-emacs-libjansson-native-elisp-compilation
-  (if (and (fboundp 'native-comp-available-p)
-           (native-comp-available-p))
-      (message "Native compilation is available")
-    (message "Native complation is *not* available"))
+;; https://www.masteringemacs.org/article/speed-up-emacs-libjansson-native-elisp-compilation
+(if (and (fboundp 'native-comp-available-p)
+         (native-comp-available-p))
+    (message "Native compilation is available")
+  (message "Native complation is *not* available"))
 
 
-  (if (functionp 'json-serialize)
-      (message "Native JSON is available")
-    (message "Native JSON is *not* available"))
+(if (functionp 'json-serialize)
+    (message "Native JSON is available")
+  (message "Native JSON is *not* available"))
 #+END_SRC
 
 *** Tips:
@@ -108,41 +109,40 @@ To describe
 
   
 ** Load env file, setup load-path
-   #+BEGIN_SRC emacs-lisp
-     ;; Trick copied from doom-emacs
-     (defun load-env-file (file)
-       (if (null (file-exists-p file))
-           (signal 'file-error (list "No env vars file exists " file ". Create one with the `env` command and store the output in " (concat *emacsd-dir* "env")))
-         (when-let
-             (env
-              (with-temp-buffer
-                (save-excursion
-                  (setq-local coding-system-for-read 'utf-8)
-                  (insert "\n")
-                  (insert-file-contents file))
-                (save-match-data
-                  (when (re-search-forward "\n *\\([^#= \n]*\\)=" nil t)
-                    (setq
-                     env (split-string (buffer-substring (match-beginning 1) (point-max))
-                                       "\n"
-                                       'omit-nulls))))))
-           (setq-default
-            process-environment
-            (append (nreverse env)
-                    (default-value 'process-environment))
-            exec-path
-            (append (split-string (getenv "PATH") path-separator t)
-                    (list exec-directory))
-            shell-file-name
-            (or (getenv "SHELL")
-                (default-value 'shell-file-name)))
-           env)))
+#+BEGIN_SRC emacs-lisp
+;; Trick copied from doom-emacs
+(defun load-env-file (file)
+  (if (null (file-exists-p file))
+      (signal 'file-error (list "No env vars file exists " file ". Create one with the `env` command and store the output in " (concat *emacsd-dir* "env")))
+    (when-let
+        (env
+         (with-temp-buffer
+           (save-excursion
+             (setq-local coding-system-for-read 'utf-8)
+             (insert "\n")
+             (insert-file-contents file))
+           (save-match-data
+             (when (re-search-forward "\n *\\([^#= \n]*\\)=" nil t)
+               (setq
+                env (split-string (buffer-substring (match-beginning 1) (point-max))
+                                  "\n"
+                                  'omit-nulls))))))
+      (setq-default
+       process-environment
+       (append (nreverse env)
+               (default-value 'process-environment))
+       exec-path
+       (append (split-string (getenv "PATH") path-separator t)
+               (list exec-directory))
+       shell-file-name
+       (or (getenv "SHELL")
+           (default-value 'shell-file-name)))
+      env)))
 
-     (add-to-list 'load-path (concat *emacsd-dir* "site-lisp"))
-     (load-env-file (concat *emacsd-dir* "env"))
-     ;;(getenv "PATH")
-
-   #+END_SRC
+(add-to-list 'load-path (concat *emacsd-dir* "site-lisp"))
+(load-env-file (concat *emacsd-dir* "env"))
+;;(getenv "PATH")
+#+END_SRC
 
 
 * Basic functions
@@ -150,18 +150,18 @@ To describe
 ** Utility functions
 Time strings in different formats.
 #+begin_src emacs-lisp
-  (defun ut/now ()
-    "Insert the current timestamp at the cursor position."
-    (interactive)
-    (insert (format-time-string "%Y-%m-%dT%T%:z")))
-  (defun ut/today ()
-    "Insert the current timestamp at the cursor position."
-    (interactive)
-    (insert (format-time-string "[%Y-%m-%d %a]")))
-  (defun ut/date ()
-    "Insert the current date at the cursor position."
-    (interactive)
-    (insert (format-time-string "%Y-%m-%d")))
+(defun ut/now ()
+  "Insert the current timestamp at the cursor position."
+  (interactive)
+  (insert (format-time-string "%Y-%m-%dT%T%:z")))
+(defun ut/today ()
+  "Insert the current timestamp at the cursor position."
+  (interactive)
+  (insert (format-time-string "[%Y-%m-%d %a]")))
+(defun ut/date ()
+  "Insert the current date at the cursor position."
+  (interactive)
+  (insert (format-time-string "%Y-%m-%d")))
 #+end_src
 
 
@@ -170,23 +170,23 @@ Time strings in different formats.
 Packages are downloaded from various online repositories, and the following are the most commonly used ones where packages get published.
 
 #+BEGIN_SRC emacs-lisp
-  ;; Initialize package sources
-  (require 'package)
+;; Initialize package sources
+(require 'package)
 
-  ;; Set up our repositories
-  (setq package-archives '(("melpa" . "https://melpa.org/packages/")
-                           ("org" . "https://orgmode.org/elpa/")
-                           ("elpa" . "https://elpa.gnu.org/packages/")))
+;; Set up our repositories
+(setq package-archives '(("melpa" . "https://melpa.org/packages/")
+                         ("org" . "https://orgmode.org/elpa/")
+                         ("elpa" . "https://elpa.gnu.org/packages/")))
 
-  (package-initialize)
-  (unless package-archive-contents
-    (package-refresh-contents))
+(package-initialize)
+(unless package-archive-contents
+  (package-refresh-contents))
 
-  (unless (package-installed-p 'use-package)
-    (package-install 'use-package))
+(unless (package-installed-p 'use-package)
+  (package-install 'use-package))
 
-  (require 'use-package)
-  (setq use-package-always-ensure t)
+(require 'use-package)
+(setq use-package-always-ensure t)
 #+END_SRC
 
 
@@ -194,10 +194,10 @@ Packages are downloaded from various online repositories, and the following are 
 
 Explorer
 #+begin_src emacs-lisp
-  (use-package magit)
-  (use-package git-timemachine)
-  (use-package undo-tree)
-  (global-undo-tree-mode +1)
+(use-package magit)
+(use-package git-timemachine)
+(use-package undo-tree)
+(global-undo-tree-mode +1)
 #+end_src
 
 
@@ -220,7 +220,7 @@ Makes the modeline look interesting.
 
 ** Help. Document. Fix.
 #+BEGIN_SRC emacs-lisp
-  (use-package dash-at-point)
+  ;;(use-package dash-at-point)
 #+END_SRC
 
 Enable syntax-checking in various modes
@@ -259,13 +259,15 @@ Hydra. /Sirf naam hi kaafi hai/.
 
 Key-chords
 #+begin_src emacs-lisp
-  (use-package key-chord)
+(use-package key-chord)
 
-  (key-chord-define-global "jj" 'avy-goto-char-timer)
-  (key-chord-define-global "jl" 'avy-goto-line)
-  (key-chord-define-global "uu" 'undo-tree-visualize)
+(key-chord-define-global "jj" 'avy-goto-char-timer)
+(key-chord-define-global "jl" 'avy-goto-line)
+(key-chord-define-global "uu" 'undo-tree-visualize)
+(key-chord-define-global "mm" 'point-to-register)
+(key-chord-define-global "''" 'jump-to-register)
 
-  (key-chord-mode +1)
+(key-chord-mode +1)
 #+end_src
 
 
@@ -274,26 +276,31 @@ Key-chords
 We can get a nice dashboard with the following setup.
 Github - [[https://github.com/emacs-dashboard/emacs-dashboard][https://github.com/emacs-dashboard/emacs-dashboard]]
 #+begin_src emacs-lisp
-   (use-package page-break-lines)
+   ;;(use-package page-break-lines)
+
+   ;; This one requires an additional manual step
+   ;; M-x all-the-icons-install-fonts
    (use-package all-the-icons)
+
    (use-package dashboard
      :ensure t
      :config
      (dashboard-setup-startup-hook))
 
    ;; Content is not centered by default. To center, set
-  (setq
-   dashboard-items '(
-                     (recents . 5)
-                     (projects . 5)
-                     (registers . 5))
-   dashboard-center-content t
-   dashboard-set-heading-items t
-   dashboard-set-file-icons t
-   dashboard-set-navigator t
-   dashboard-set-footer nil
-   dashboard-startup-banner 'logo
-   )
+   (setq
+    dashboard-items '(
+                      (recents . 5)
+                      (agenda . 5)
+                      (registers . 5))
+    dashboard-banner-logo-title "नमस्कार"
+    dashboard-center-content t
+    dashboard-set-heading-items t
+    dashboard-set-file-icons t
+    dashboard-set-navigator t
+    dashboard-set-footer nil
+    dashboard-startup-banner 'logo
+    )
 
 #+end_src
 
@@ -304,7 +311,7 @@ Github - [[https://github.com/emacs-dashboard/emacs-dashboard][https://github.co
 #+end_src
 
 #+BEGIN_SRC emacs-lisp
-  (set-face-attribute 'default nil :font "Fira Code" :height 180)
+  (set-face-attribute 'default nil :font "Fira Code" :height 160)
   (load-theme 'modus-vivendi)
   ;; (load-theme 'wombat)
   ;; (load-theme 'tsdh-dark)
@@ -449,46 +456,47 @@ To use LSP, you need to have /python-language-server/  installed
 [[https://microsoft.github.io/language-server-protocol/][Language Server Protocol]] is the protocol used between an editor/IDE client and a language server that provides various language features for productive development.
 
 #+BEGIN_SRC emacs-lisp
-  ;; More ideas from
-  ;; https://blog.sumtypeofway.com/posts/emacs-config.html
-  (use-package which-key
-    :config
-    (which-key-mode))
-  (use-package yasnippet
-    :defer 3
-    :diminish yas-minor-mode
-    :config (yas-global-mode)
-    :custom (yas-prompt-functions '(yas-completing-prompt))) ;; By default, lsp-mode turns on snippets
-  (use-package yasnippet-snippets)
-  (use-package lsp-mode
-    :ensure t
-    :hook ((lsp-mode . lsp-enable-which-key-integration)
-           (lsp-mode . lsp-diagnostics-modeline-mode)
-           (clojure-mode . lsp))
-    :custom
-    (lsp-diagnostics-modeline-mode :project)
-    (lsp-rust-analyzer-server-display-inlay-hints t)
-    :config
-    (add-to-list 'lsp-language-id-configuration '(("clojure-mode" "clojure")))
-    (setq lsp-clojure-custom-server-command '("clojure-lsp")))
-  (use-package lsp-ivy
-    :commands lsp-ui-mode)
-  (use-package lsp-ui
-    :ensure
-    :commands lsp-ui-mode
-    :after lsp-mode
-    :custom
-    (lsp-ui-peek-always-show t)
-    (lsp-ui-sideline-show-hover t)
-    (lsp-ui-doc-enable nil))
-  (use-package company)
-  ;;(use-package company-lsp)
-  (use-package lsp-ivy
-    :commands lsp-ivy-workspace-symbol
-    :after (ivy lsp-mode))
-  (use-package lsp-treemacs
-    :commands lsp-treemacs-errors-list)
-  (use-package dap-mode)
+;; More ideas from
+;; https://blog.sumtypeofway.com/posts/emacs-config.html
+(use-package which-key
+  :config
+  (which-key-mode))
+(use-package yasnippet
+  :defer 3
+  :diminish yas-minor-mode
+  :config (yas-global-mode)
+  :custom (yas-prompt-functions '(yas-completing-prompt))) ;; By default, lsp-mode turns on snippets
+(use-package yasnippet-snippets)
+(use-package lsp-mode
+  :ensure t
+  :hook ((lsp-mode . lsp-enable-which-key-integration)
+         (lsp-mode . lsp-diagnostics-modeline-mode)
+         (clojure-mode . lsp))
+  :custom
+  (lsp-diagnostics-modeline-mode :project)
+  (lsp-rust-analyzer-server-display-inlay-hints t)
+  :config
+  (add-to-list 'lsp-language-id-configuration '(("clojure-mode" "clojure")))
+  (setq lsp-clojure-custom-server-command '("clojure-lsp"))
+  (setq lsp-lens-enable t))
+(use-package lsp-ivy
+  :commands lsp-ui-mode)
+(use-package lsp-ui
+  :ensure
+  :commands lsp-ui-mode
+  :after lsp-mode
+  :custom
+  (lsp-ui-peek-always-show t)
+  (lsp-ui-sideline-show-hover t)
+  (lsp-ui-doc-enable nil))
+(use-package company)
+;;(use-package company-lsp)
+(use-package lsp-ivy
+  :commands lsp-ivy-workspace-symbol
+  :after (ivy lsp-mode))
+(use-package lsp-treemacs
+  :commands lsp-treemacs-errors-list)
+(use-package dap-mode)
 #+END_SRC
 
 
@@ -677,3 +685,5 @@ Move across windows, structural navigation, window resizing
 #+begin_src emacs-lisp
 ;;(use-package doom-themes)
 #+end_src
+
+
