@@ -687,3 +687,10 @@ Move across windows, structural navigation, window resizing
 #+end_src
 
 
+* Interesting packages to note
+- [[https://github.com/Fuco1/smartparens][smartparens]]
+
+* Interesting articles
+- [[http://www.howardism.org/Technical/Emacs/orgmode-wordprocessor.html][Org as a Word processor]]
+- [[https://zzamboni.org/post/beautifying-org-mode-in-emacs/][Beautifying Org-mode in Emacs]]
+- [[https://lucidmanager.org/productivity/create-websites-with-org-mode-and-hugo/][Blogging with Org-mode and Hugo]]
