@@ -15,6 +15,7 @@
   :config
   (require 'flycheck-clj-kondo))
 (use-package clj-refactor)
+(use-package clojure-mode-extra-font-locking)
 
 (defun clj/pretty-fns ()
   (font-lock-add-keywords
@@ -35,7 +36,7 @@
 
 (defun clj/bb-repl ()
   (interactive)
-  (inf-clojure "bb"))
+  (shell-command "bb2"))
 
 (add-to-list 'auto-mode-alist
 	     '("\\.edn$" . clojure-mode))
