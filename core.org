@@ -223,15 +223,15 @@ Hydra. /Sirf naam hi kaafi hai/.
 
 Key-chords
 #+begin_src emacs-lisp
-(use-package key-chord)
+;;(use-package key-chord)
 
-(key-chord-define-global "jj" 'avy-goto-char-timer)
-(key-chord-define-global "jl" 'avy-goto-line)
-(key-chord-define-global "uu" 'undo-tree-visualize)
-(key-chord-define-global "mm" 'point-to-register)
-(key-chord-define-global "''" 'jump-to-register)
+;;(key-chord-define-global "jj" 'avy-goto-char-timer)
+;;(key-chord-define-global "jl" 'avy-goto-line)
+;;(key-chord-define-global "uu" 'undo-tree-visualize)
+;;(key-chord-define-global "mm" 'point-to-register)
+;;(key-chord-define-global "''" 'jump-to-register)
 
-(key-chord-mode +1)
+;;(key-chord-mode +1)
 #+end_src
 
 
@@ -662,6 +662,8 @@ Move across windows, structural navigation, window resizing
 * Other Experimental Stuff
 #+begin_src emacs-lisp
 ;;(use-package doom-themes)
+
+(use-package alda-mode)
 #+end_src
 
 
