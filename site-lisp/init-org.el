@@ -75,8 +75,8 @@
 (setq org-confirm-babel-evaluate nil)
 
 ;; More from http://fgiasson.com/blog/index.php/2016/04/05/using-clojure-in-org-mode-and-implementing-asynchronous-processing/
-(org-defkey org-mode-map "\C-x\C-e" 'cider-eval-last-sexp)
-(org-defkey org-mode-map "\C-c\C-d" 'cider-doc)
+;; (org-defkey org-mode-map "\C-x\C-e" 'cider-eval-last-sexp)
+;; (org-defkey org-mode-map "\C-c\C-d" 'cider-doc)
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -208,7 +208,7 @@ Returns the list of tangled files."
           (directory-files-recursive (file-name-directory (buffer-file-name)) "\\.org$" 20)))
 
 ;; PlantUML
-(setq org-plantuml-jar-path (expand-file-name "/usr/local/Cellar/plantuml/1.2021.13/libexec/plantuml.jar"))
+(setq org-plantuml-jar-path (expand-file-name "/usr/local/Cellar/plantuml/1.2021.16/libexec/plantuml.jar"))
 (add-to-list 'org-src-lang-modes '("plantuml" . plantuml))
 ;(org-babel-do-load-languages 'org-babel-load-languages '((plantuml . t)))
 

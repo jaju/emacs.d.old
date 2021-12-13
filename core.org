@@ -6,15 +6,15 @@
 The emacs refcard can be found online [[https://www.gnu.org/software/emacs/refcards/pdf/refcard.pdf][here]].
 
 ** Notes
-- Configuration tested on a MacOS (currently, Big Sur) with locally-compiled emacs. Compiled with the following options.
+- Configuration tested on a MacOS (currently, Monterey) with locally-compiled emacs. Compiled with the following options.
 
-#+BEGIN_SRC bash
-  ACLOCAL_PATH='/usr/local/share/aclocal' ./configure --prefix=/usr/local/emacs/HEAD --with-gnutls --with-rsvg --without-dbus --enable-locallisppath=/usr/local/share/emacs/site-lisp --infodir=/usr/local/emacs/HEAD/share/info/emacs --with-ns --disable-ns-self-contained --with-imagemagick --without-xpm --without-tiff --with-jpeg --with-gif --with-png --with-xft --with-mailutils --with-json --with-x --with-native-compilation
+#+BEGIN_SRC bashX
+ACLOCAL_PATH="/usr/local/share/aclocal" GCCBASE="/usr/local/Cellar/gcc/11.2.0_3" CFLAGS="-I$GCCBASE/include" LDFLAGS="-L$GCCBASE/lib/gcc/11 -L$CFLAGS" LIBRARY_PATH="$GCCBASE/lib/gcc/11" ./configure --prefix=/usr/local/emacs/HEAD --with-gnutls --with-rsvg --without-dbus --enable-locallisppath=/usr/local/share/emacs/site-lisp --infodir=/usr/local/emacs/HEAD/share/info/emacs --with-ns --disable-ns-self-contained --with-imagemagick --without-xpm --without-tiff --with-jpeg --with-gif --with-png --with-xft --with-mailutils --with-json --with-x --with-native-compilation
 #+END_SRC
 
 - Homebrew has libgccjit, which can be leveraged for enabling native compilation
 
-- This is not an original piece of work - but stitched together from multiple cool examples I've found over time. Doom-emacs remains a key source of influence.
+- This is not an original piece of work - but stitched together from multiple examples I've found over time. Doom-emacs remains a key source of influence.
   
 
 * Opening Setup
@@ -378,8 +378,9 @@ To use LSP, you need to have /python-language-server/  installed
 
 
 * JS, JSON
-#+begin_src  emacs-elisp
+#+begin_src  emacs-lisp
 (use-package json-mode)
+(use-package json-par)
 #+end_src
 
 
@@ -409,8 +410,6 @@ To use LSP, you need to have /python-language-server/  installed
     (setq-local buffer-save-without-query t))
 
   (use-package ob-rust)
-
-
 
   (add-hook #'rust-mode-hook #'lsp)
 #+end_src
@@ -666,9 +665,18 @@ Move across windows, structural navigation, window resizing
 (use-package alda-mode)
 #+end_src
 
+#+begin_src alda :tangle no
+	(tempo! 60)
+	(quant! 99)
+
+	midi-harpsichord: o2 g > e > c < b > c < e > c < e < g > e > c < b > c < e > c < e
+#+end_src
+
+
 
 * Interesting packages to note
 - [[https://github.com/Fuco1/smartparens][smartparens]]
+- [[https://github.com/ethan-leba/tree-edit][tree-edit]]
 
   
 * Interesting articles
