@@ -15,7 +15,7 @@
       org-startup-indented t
       org-src-fontify-natively t
       org-default-notes-file "~/.org/on-the-fly-notes.org"
-      org-fontify-whole-heading-line nil
+      org-fontify-whole-heading-line t
       org-return-follows-link t
       org-hide-emphasis-markers nil
       org-image-actual-width nil
@@ -210,7 +210,6 @@ Returns the list of tangled files."
 ;; PlantUML
 (setq org-plantuml-jar-path (expand-file-name "/usr/local/Cellar/plantuml/1.2021.16/libexec/plantuml.jar"))
 (add-to-list 'org-src-lang-modes '("plantuml" . plantuml))
-;(org-babel-do-load-languages 'org-babel-load-languages '((plantuml . t)))
 
 (use-package htmlize
   :ensure t)
@@ -245,20 +244,14 @@ Returns the list of tangled files."
 
 ;;(add-hook 'org-mode-hook 'variable-pitch-mode)
 
-(font-lock-add-keywords 'org-mode
-			'(("^\\*+ "
-			   ":" nil nil
-			   (0 (put-text-property (match-beginning 0) (match-end 0) 'display " ")))
-			  ("^ *\\([-]\\) "
-			   (0 (prog1 () (compose-region (match-beginning 1) (match-end 1) "➤"))))))
-
 ;; Picked from http://www.howardism.org/Technical/Emacs/orgmode-wordprocessor.html
 ;; and https://zzamboni.org/post/beautifying-org-mode-in-emacs/
 (let* ((variable-tuple
-        (cond ((x-list-fonts "Fira Code")       '(:font "Fira Code"))
-              ((x-list-fonts "Lucida Grande")   '(:font "Lucida Grande"))
-              ((x-list-fonts "Verdana")         '(:font "Verdana"))
-              ((x-family-fonts "Sans Serif")    '(:family "Sans Serif"))
+        (cond ((x-list-fonts "FiraMono Nerd Font")  '(:font "FiraMono Nerd Font"))
+	      ((x-list-fonts "Fira Code")           '(:font "Fira Code"))
+              ((x-list-fonts "Lucida Grande")       '(:font "Lucida Grande"))
+              ((x-list-fonts "Verdana")             '(:font "Verdana"))
+              ((x-family-fonts "Sans Serif")        '(:family "Sans Serif"))
               (nil (warn "Cannot find any of the required fonts."))))
        (topline            `(:inherit fixed-pitch :weight ultra-bold :foreground "yellow" :underline nil))
        (headline           `(:inherit fixed-pitch :weight semi-bold :foreground "white")))

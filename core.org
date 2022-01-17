@@ -275,11 +275,11 @@ Github - [[https://github.com/emacs-dashboard/emacs-dashboard][https://github.co
 #+end_src
 
 #+BEGIN_SRC emacs-lisp
-  (set-face-attribute 'default nil :font "Fira Code" :height 160)
-  (load-theme 'modus-vivendi)
+  (set-face-attribute 'default nil :font "FiraMono Nerd Font" :height 160)
+  ;; (load-theme 'modus-vivendi)
   ;; (load-theme 'wombat)
   ;; (load-theme 'tsdh-dark)
-  ;; (load-theme 'sanityinc-tomorrow-bright)
+  (load-theme 'sanityinc-tomorrow-bright)
 #+END_SRC
 
 
