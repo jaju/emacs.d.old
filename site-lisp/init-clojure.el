@@ -29,7 +29,7 @@
      (define-key clojure-mode-map (kbd "C-c C-h") #'cider-cheatsheet)
      ;;(add-hook 'clojure-mode-hook #'lsp)
      ;;(add-hook 'clojurescript-mode-hook #'lsp)
-     (add-hook 'clojure-mode-hook #'clj/pretty-fns)
+     ;;(add-hook 'clojure-mode-hook #'clj/pretty-fns)
      (add-hook 'cider-repl-mode-hook
                (lambda () (define-key cider-repl-mode-map (kbd "C-c M-b")
 			    'cider-repl-clear-buffer)))))

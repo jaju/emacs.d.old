@@ -223,7 +223,7 @@ Hydra. /Sirf naam hi kaafi hai/.
 
 Key-chords
 #+begin_src emacs-lisp
-;;(use-package key-chord)
+(use-package key-chord)
 
 ;;(key-chord-define-global "jj" 'avy-goto-char-timer)
 ;;(key-chord-define-global "jl" 'avy-goto-line)
@@ -265,7 +265,6 @@ Github - [[https://github.com/emacs-dashboard/emacs-dashboard][https://github.co
     dashboard-set-footer nil
     dashboard-startup-banner 'logo
     )
-
 #+end_src
 
 
@@ -276,10 +275,10 @@ Github - [[https://github.com/emacs-dashboard/emacs-dashboard][https://github.co
 
 #+BEGIN_SRC emacs-lisp
   (set-face-attribute 'default nil :font "FiraMono Nerd Font" :height 160)
-  ;; (load-theme 'modus-vivendi)
+  (load-theme 'modus-vivendi)
   ;; (load-theme 'wombat)
   ;; (load-theme 'tsdh-dark)
-  (load-theme 'sanityinc-tomorrow-bright)
+  ;; (load-theme 'sanityinc-tomorrow-bright)
 #+END_SRC
 
 
@@ -357,7 +356,7 @@ To use LSP, you need to have /python-language-server/  installed
   (pyvenv-mode t)
   (use-package lsp-python-ms
     :ensure t
-    :init (setq lsp-python-ms-executable (executable-find "python-language-server"))
+    :init (setq lsp-python-ms-executable (executable-find "python-lsp-server"))
     :hook (python-mode . (lambda ()
                            (require 'lsp-python-ms)
                            (lsp))))
