@@ -9,7 +9,7 @@ The emacs refcard can be found online [[https://www.gnu.org/software/emacs/refca
 - Configuration tested on a MacOS (currently, Monterey) with locally-compiled emacs. Compiled with the following options.
 
 #+BEGIN_SRC bashX
-ACLOCAL_PATH="/usr/local/share/aclocal" GCCBASE="/usr/local/Cellar/gcc/11.2.0_3" CFLAGS="-I$GCCBASE/include" LDFLAGS="-L$GCCBASE/lib/gcc/11 -L$CFLAGS" LIBRARY_PATH="$GCCBASE/lib/gcc/11" ./configure --prefix=/usr/local/emacs/HEAD --with-gnutls --with-rsvg --without-dbus --enable-locallisppath=/usr/local/share/emacs/site-lisp --infodir=/usr/local/emacs/HEAD/share/info/emacs --with-ns --disable-ns-self-contained --with-imagemagick --without-xpm --without-tiff --with-jpeg --with-gif --with-png --with-xft --with-mailutils --with-json --with-x --with-native-compilation
+ACLOCAL_PATH="/usr/local/share/aclocal" GCCBASE="/usr/local/Cellar/gcc/11.2.0_3" CFLAGS="-I$GCCBASE/include" LDFLAGS="-L$GCCBASE/lib/gcc/11 $LDFLAGS" LIBRARY_PATH="$GCCBASE/lib/gcc/11" ./configure --prefix=/usr/local/emacs/HEAD --with-gnutls --with-rsvg --without-dbus --enable-locallisppath=/usr/local/share/emacs/site-lisp --infodir=/usr/local/emacs/HEAD/share/info/emacs --with-ns --disable-ns-self-contained --with-imagemagick --without-xpm --without-tiff --with-jpeg --with-gif --with-png --with-xft --with-mailutils --with-json --with-x --with-native-compilation
 #+END_SRC
 
 - Homebrew has libgccjit, which can be leveraged for enabling native compilation
@@ -383,37 +383,6 @@ To use LSP, you need to have /python-language-server/  installed
 #+end_src
 
 
-* Rust
-** TODO Look at [[https://robert.kra.hn/posts/2021-02-07_rust-with-emacs/][this post]] for ideas.
-** Config
-#+begin_src emacs-lisp
-
-  ;;(use-package rust-mode)
-
-  ;; rustic is a fork of rust-mode with some additions
-  (use-package rustic
-    :ensure
-    :bind (:map rustic-mode-map
-                ("M-j" . lsp-ui-imenu)
-                ("M-?" . lsp-find-references)
-                ("C-c C-c a" . lsp-execute-code-action)
-                ("C-c C-c r" . lsp-rename)
-                ("C-c C-c q" . lsp-workspace-restart)
-                ("C-c C-c Q" . lsp-wokspace-shutdown)
-                ("C-c C-c s" . lsp-rust-analyzer-status))
-    :config
-    (setq rustic-format-on-save t)
-    (add-hook 'rustic-mode-hook 'rk/rustic-mode-hook))
-
-  (defun rk/rustic-mode-hook ()
-    (setq-local buffer-save-without-query t))
-
-  (use-package ob-rust)
-
-  (add-hook #'rust-mode-hook #'lsp)
-#+end_src
-
-
 * LSP
 [[https://microsoft.github.io/language-server-protocol/][Language Server Protocol]] is the protocol used between an editor/IDE client and a language server that provides various language features for productive development.
 
@@ -460,6 +429,37 @@ To use LSP, you need to have /python-language-server/  installed
   :commands lsp-treemacs-errors-list)
 (use-package dap-mode)
 #+END_SRC
+
+
+* Rust
+** TODO Look at [[https://robert.kra.hn/posts/2021-02-07_rust-with-emacs/][this post]] for ideas.
+** Config
+#+begin_src emacs-lisp
+
+  ;;(use-package rust-mode)
+
+  ;; rustic is a fork of rust-mode with some additions
+  (use-package rustic
+    :ensure
+    :bind (:map rustic-mode-map
+                ("M-j" . lsp-ui-imenu)
+                ("M-?" . lsp-find-references)
+                ("C-c C-c a" . lsp-execute-code-action)
+                ("C-c C-c r" . lsp-rename)
+                ("C-c C-c q" . lsp-workspace-restart)
+                ("C-c C-c Q" . lsp-wokspace-shutdown)
+                ("C-c C-c s" . lsp-rust-analyzer-status))
+    :config
+    (setq rustic-format-on-save t)
+    (add-hook 'rustic-mode-hook 'rk/rustic-mode-hook))
+
+  (defun rk/rustic-mode-hook ()
+    (setq-local buffer-save-without-query t))
+
+  (use-package ob-rust)
+
+  (add-hook #'rust-mode-hook #'lsp)
+#+end_src
 
 
 * Org Mode
