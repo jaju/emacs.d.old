@@ -194,6 +194,10 @@ Enable syntax-checking in various modes
     :init (global-flycheck-mode))
 #+END_SRC
 
+#+begin_src emacs-lisp
+  (use-package mermaid-mode)
+#+end_src
+
 
 ** Explorer
 #+BEGIN_SRC emacs-lisp

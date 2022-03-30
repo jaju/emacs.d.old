@@ -47,6 +47,7 @@
 (use-package ob-http)
 (use-package restclient)
 (use-package ob-restclient)
+(use-package ob-mermaid)
 
 ;; Diagrams
 (use-package plantuml-mode)
@@ -71,7 +72,8 @@
    (plantuml . t)
    (http . t)
    (restclient . t)
-   (rust . t)))
+   (rust . t)
+   (mermaid . t)))
 (setq org-confirm-babel-evaluate nil)
 
 ;; More from http://fgiasson.com/blog/index.php/2016/04/05/using-clojure-in-org-mode-and-implementing-asynchronous-processing/
@@ -208,7 +210,7 @@ Returns the list of tangled files."
           (directory-files-recursive (file-name-directory (buffer-file-name)) "\\.org$" 20)))
 
 ;; PlantUML
-(setq org-plantuml-jar-path (expand-file-name "/usr/local/Cellar/plantuml/1.2022.2/libexec/plantuml.jar"))
+(setq org-plantuml-jar-path (expand-file-name "/usr/local/Cellar/plantuml/1.2022.3/libexec/plantuml.jar"))
 (add-to-list 'org-src-lang-modes '("plantuml" . plantuml))
 
 (use-package htmlize
