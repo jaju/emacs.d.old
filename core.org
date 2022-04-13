@@ -674,6 +674,8 @@ Move across windows, structural navigation, window resizing
 
 
 * Other Experimental Stuff
+
+** Alda
 #+begin_src emacs-lisp
 ;;(use-package doom-themes)
 
@@ -687,6 +689,11 @@ Move across windows, structural navigation, window resizing
 	midi-harpsichord: o2 g > e > c < b > c < e > c < e < g > e > c < b > c < e > c < e
 #+end_src
 
+** Mermaid
+#+begin_src emacs-lisp
+(use-package mermaid-mode)
+(use-package ob-mermaid)
+#+end_src
 
 
 * Interesting packages to note
