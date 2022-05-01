@@ -210,7 +210,7 @@ Returns the list of tangled files."
           (directory-files-recursive (file-name-directory (buffer-file-name)) "\\.org$" 20)))
 
 ;; PlantUML
-(setq org-plantuml-jar-path (expand-file-name "/usr/local/Cellar/plantuml/1.2022.4/libexec/plantuml.jar"))
+(setq org-plantuml-jar-path (expand-file-name "/usr/local/Cellar/plantuml/1.2022.5/libexec/plantuml.jar"))
 (add-to-list 'org-src-lang-modes '("plantuml" . plantuml))
 
 (use-package htmlize
